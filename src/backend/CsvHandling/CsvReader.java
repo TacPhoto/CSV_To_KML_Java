@@ -1,5 +1,6 @@
 package backend.CsvHandling;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,24 +8,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
 import java.io.FileReader; //this could never happen TODO: implement safety mechanism
 import java.io.IOException;//this could never happen^
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class CsvReader {
-    private String csvPath;
-    private Reader reader;
-    private CSVFormat fmt = CSVFormat.EXCEL.withDelimiter(';');
+    private BufferedReader reader;
+    //private CSVFormat fmt = CSVFormat.EXCEL.withDelimiter(';');
     private List<String> lineList = new ArrayList<String>();
 
     private final static Logger LOGGER = Logger.getLogger(CsvReader.class.getName());
 
     public CsvReader(String csvPath) throws IOException {
-        this.csvPath = csvPath;
         this.reader = Files.newBufferedReader(Paths.get(csvPath));
         LOGGER.setLevel(Level.INFO);
     }
@@ -32,10 +29,9 @@ public class CsvReader {
     private void csvToStringList() throws IOException {
         LOGGER.info("READING CSV FILE LINE BY LINE");
         try {
-            int i = 0;
-            Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(reader);
-            for (CSVRecord record : records)
-                lineList.add(record.get(i));
+            String line;
+            while((line = reader.readLine()) != null)
+                lineList.add(line);
         } catch (IOException e) {
             e.printStackTrace();
         }
