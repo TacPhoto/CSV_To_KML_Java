@@ -39,7 +39,7 @@ public class OriginalKmlData {
          * for creating icon id list for placemark data
          * and for creating a final kml header.
          */
-        LOGGER.info("READING KML HEADER");
+        LOGGER.info("READING KML HEADER. Path used: " + path);
 
         StringBuilder str = new StringBuilder("");
         BufferedReader reader = Files.newBufferedReader(Paths.get(path));

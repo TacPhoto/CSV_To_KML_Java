@@ -23,7 +23,7 @@ public class CsvReader {
 
     public CsvReader(String csvPath) throws IOException {
         LOGGER.setLevel(Level.INFO);
-        LOGGER.info("CSV reader initialization");
+        LOGGER.info("CSV reader initialization. Path used: " + csvPath);
         this.reader = Files.newBufferedReader(Paths.get(csvPath));
     }
 
