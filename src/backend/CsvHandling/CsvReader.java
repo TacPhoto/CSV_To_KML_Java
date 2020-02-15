@@ -22,8 +22,9 @@ public class CsvReader {
     private final static Logger LOGGER = Logger.getLogger(CsvReader.class.getName());
 
     public CsvReader(String csvPath) throws IOException {
-        this.reader = Files.newBufferedReader(Paths.get(csvPath));
         LOGGER.setLevel(Level.INFO);
+        LOGGER.info("CSV reader initialization");
+        this.reader = Files.newBufferedReader(Paths.get(csvPath));
     }
 
     private void csvToStringList() throws IOException {
@@ -40,9 +41,9 @@ public class CsvReader {
 
     private void sortStringList(){
         /**
-         Returns a given list without changing the position of a first record.
-         Important when the list is made of a csv file with header.
-         DO NOT USE ON LISTS WITHOUT HEADERS
+         *Returns a given list without changing the position of a first record.
+         *Important when the list is made of a csv file with header.
+         *DO NOT USE ON LISTS WITHOUT HEADERS
          */
         String temp = lineList.get(0);
         lineList.remove(0);
