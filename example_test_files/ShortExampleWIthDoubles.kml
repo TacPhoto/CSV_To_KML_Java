@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>ShortExample.kml</name>
+	<StyleMap id="msn_electronics">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_electronics</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_electronics</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_electronics">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/electronics.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_electronics">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_electronics</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_electronics</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_electronics">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/electronics.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sh_coffee">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/coffee.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sn_homegardenbusiness">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sh_homegardenbusiness">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sn_electronics">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/electronics.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_dollar">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_dollar</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_dollar</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_coffee">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/coffee.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_homegardenbusiness">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_homegardenbusiness</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_homegardenbusiness</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_dollar">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/dollar.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_coffee">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_coffee</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_coffee</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Style id="sh_info_circle">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/info_circle.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sn_dollar">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/dollar.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<Style id="sn_info_circle">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/info_circle.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<BalloonStyle>
+		</BalloonStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_info_circle">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_info_circle</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_info_circle</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Folder>
+		<name>ShortExample</name>
+		<open>1</open>
+		<Placemark>
+			<name>pin</name>
+			<LookAt>
+				<longitude>20.22071443958868</longitude>
+				<latitude>52.0225308818815</latitude>
+				<altitude>0</altitude>
+				<heading>7.259103711843193</heading>
+				<tilt>0</tilt>
+				<range>1108953.793528179</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#m_ylw-pushpin</styleUrl>
+			<Point>
+				<gx:drawOrder>1</gx:drawOrder>
+				<coordinates>20.63987205662871,52.88251196120414,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>questionMark</name>
+			<LookAt>
+				<longitude>20.22071443958868</longitude>
+				<latitude>52.0225308818815</latitude>
+				<altitude>0</altitude>
+				<heading>7.259103711843193</heading>
+				<tilt>0</tilt>
+				<range>1108953.793528179</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_info_circle</styleUrl>
+			<Point>
+				<gx:drawOrder>1</gx:drawOrder>
+				<coordinates>15.76592805112075,52.09108028088639,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>dollar</name>
+			<LookAt>
+				<longitude>13.78293800615851</longitude>
+				<latitude>52.66203649197775</latitude>
+				<altitude>0</altitude>
+				<heading>2.154519085414819</heading>
+				<tilt>0</tilt>
+				<range>1617275.327709852</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_dollar</styleUrl>
+			<Point>
+				<gx:drawOrder>1</gx:drawOrder>
+				<coordinates>11.6612689495538,53.44153713292702,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>coffee</name>
+			<LookAt>
+				<longitude>13.78293800615851</longitude>
+				<latitude>52.66203649197775</latitude>
+				<altitude>0</altitude>
+				<heading>2.154519085414819</heading>
+				<tilt>0</tilt>
+				<range>1617275.327709852</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_coffee</styleUrl>
+			<Point>
+				<gx:drawOrder>1</gx:drawOrder>
+				<coordinates>12.82576015447865,51.33392508342249,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>home</name>
+			<LookAt>
+				<longitude>13.78293800615851</longitude>
+				<latitude>52.66203649197775</latitude>
+				<altitude>0</altitude>
+				<heading>2.154519085414819</heading>
+				<tilt>0</tilt>
+				<range>1617275.327709852</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_homegardenbusiness</styleUrl>
+			<Point>
+				<gx:drawOrder>1</gx:drawOrder>
+				<coordinates>18.58712171497726,50.44550628263667,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>tv</name>
+			<LookAt>
+				<longitude>13.78293800615851</longitude>
+				<latitude>52.66203649197775</latitude>
+				<altitude>0</altitude>
+				<heading>2.154519085414819</heading>
+				<tilt>0</tilt>
+				<range>1617275.327709852</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_electronics</styleUrl>
+			<Point>
+				<gx:drawOrder>1</gx:drawOrder>
+				<coordinates>16.14788298183945,53.87056135290255,0</coordinates>
+			</Point>
+		</Placemark>
+	</Folder>
+</Document>
+</kml>
