@@ -2,7 +2,6 @@ package backend.KmlHandling;
 
 import backend.CsvHandling.CsvReader;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class OriginalKmlData {
     private List<String> iconList;
@@ -41,12 +41,12 @@ public class OriginalKmlData {
          */
         LOGGER.info("READING KML HEADER. Path used: " + path);
 
-        StringBuilder str = new StringBuilder("");
+        StringBuilder str = new StringBuilder();
         BufferedReader reader = Files.newBufferedReader(Paths.get(path));
 
         try {
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 if (line.equals("\t<Folder>"))
                     break;
                 str.append(line + '\n');
@@ -66,12 +66,18 @@ public class OriginalKmlData {
         Matcher matcher = pattern.matcher(IconsHeader);
 
         LOGGER.info("Searching for icon list tags");
-        while (matcher.find()){
+        while (matcher.find()) {
             iconList.add(matcher.group());
         }
 
-        if(iconList.toString().equals("[]"))
+        if (iconList.toString().equals("[]"))
             throw new Exception("No icon data found in header, KML file is invalid");
+
+        listCleanup();
+    }
+
+    private void listCleanup() {
+        iconList = iconList.stream().distinct().collect(Collectors.toList());
     }
 
     public String getIconsHeader() {
