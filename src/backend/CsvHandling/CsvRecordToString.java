@@ -57,26 +57,31 @@ public class CsvRecordToString {
         String description = descriptionBuilder.toString();
 
         ////Make a paste ready Placemark data string:
+        /**
+        *Indentation below may not match the one from the comment abovr
+         *but it is correct. It's based on kml format
+         */
 
         StringBuilder placemarkBuilder = new StringBuilder();
 
-        placemarkBuilder.append("\t\t<Placemark>\n");
-        placemarkBuilder.append("\t\t\t<name>"+name+"<//name>\n");
-        placemarkBuilder.append("\t\t\t<LookAt>\n");
-        placemarkBuilder.append("\t\t\t\t<longitude>"+longitude+"<//longitude>/n"+
-                "\t\t\t\t<latitude>"+latitude+"<//latitude>\n");
-        placemarkBuilder.append("\t\t\t\t<altitude>0</altitude>"+
-                "\t\t\t\t<heading>7</heading>\n"+
-                "\t\t\t\t<tilt>0</tilt>\n"+
-                "\t\t\t\t<range>1108953.793528179</range>\n"+
-                "\t\t\t\t<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n");
-        placemarkBuilder.append("\t\t\t<//LookAt>\n");
-        placemarkBuilder.append("\t\t\t<styleUrl>#"+getIconName+"</styleUrl>\n"); //todo: implement getIconName
-        placemarkBuilder.append("\t\t\t<Point>\n");
-        placemarkBuilder.append("\t\t\t\tgx:drawOrder>1</gx:drawOrder>\n" +
-                "\t\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>");
-        placemarkBuilder.append("\t\t\t<//Point>\n");
-        placemarkBuilder.append("\t\t<//Placemark>\n");
+        placemarkBuilder.append("\t<Placemark>\n");
+        placemarkBuilder.append("\t\t<name>"+name+"<//name>\n");
+        placemarkBuilder.append("\t\t<description>"+description+"<//description>\n");
+        placemarkBuilder.append("\t\t<LookAt>\n");
+        placemarkBuilder.append("\t\t\t<longitude>"+longitude+"<//longitude>/n"+
+                "\t\t\t<latitude>"+latitude+"<//latitude>\n");
+        placemarkBuilder.append("\t\t\t<altitude>0</altitude>"+
+                "\t\t\t<heading>7</heading>\n"+
+                "\t\t\t<tilt>0</tilt>\n"+
+                "\t\t\t<range>1108953.793528179</range>\n"+
+                "\t\t\t<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n");
+        placemarkBuilder.append("\t\t<//LookAt>\n");
+        placemarkBuilder.append("\t\t<styleUrl>#"+getIconName+"</styleUrl>\n"); //todo: implement getIconName
+        placemarkBuilder.append("\t\t<Point>\n");
+        placemarkBuilder.append("\t\t\tgx:drawOrder>1</gx:drawOrder>\n" +
+                "\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>");
+        placemarkBuilder.append("\t\t<//Point>\n");
+        placemarkBuilder.append("\t<//Placemark>\n");
 
         String placemark = placemarkBuilder.toString();
 
