@@ -3,10 +3,23 @@ package backend.CsvHandling;
 import java.util.List;
 
 public class CsvRecordToString {
-    public CsvRecordToString() {
+    public List<String> iconList; //iconList from OriginalKmlData
+    int categoriesAmount, maxRate;
+    String line, record;
+    boolean hasRating, addLastCategory;
+    private String lastCategory;
+
+    public CsvRecordToString(List<String> iconList, int categoriesAmount, int maxRate, String line, boolean hasRating, boolean addLastCategory) {
+        this.iconList = iconList;
+        this.categoriesAmount = categoriesAmount;
+        this.maxRate = maxRate;
+        this.line = line;
+        this.hasRating = hasRating;
+        this.addLastCategory = addLastCategory;
+        this.record = getPinData();
     }
 
-    private String getPinData(int categoriesAmount, String line, boolean hasRating, int maxRate, boolean addLastCategory){ //todo: implement 0 categories variant, overload and handle it
+    private String getPinData(){ //todo: implement 0 categories variant, overload and handle it
         /**
          * reads Pin data. it ignores folders and folder indentation
          * folder indentation should be added later, per line
@@ -41,7 +54,7 @@ public class CsvRecordToString {
         String latitude = lineSplit[categoriesAmount + 1];
         String name = lineSplit[categoriesAmount + 2];
         String rating = hasRating ? lineSplit[lineSplit.length - 1] + "//" + maxRate : ""; //todo: allow to input number instead of checking number of characters
-        String lastCategory =  addLastCategory ? lineSplit[categoriesAmount - 1] : "";
+        lastCategory =  addLastCategory ? lineSplit[categoriesAmount - 1] : ""; //tolerates 0 categories variant
 
         StringBuilder descriptionBuilder = new StringBuilder();
 
@@ -76,7 +89,7 @@ public class CsvRecordToString {
                 "\t\t\t<range>1108953.793528179</range>\n"+
                 "\t\t\t<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n");
         placemarkBuilder.append("\t\t<//LookAt>\n");
-        placemarkBuilder.append("\t\t<styleUrl>#"+getIconName+"</styleUrl>\n"); //todo: implement getIconName
+        placemarkBuilder.append("\t\t<styleUrl>#"+getIconName(lastCategory)+"</styleUrl>\n"); //todo: implement getIconName
         placemarkBuilder.append("\t\t<Point>\n");
         placemarkBuilder.append("\t\t\tgx:drawOrder>1</gx:drawOrder>\n" +
                 "\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>");
@@ -86,5 +99,23 @@ public class CsvRecordToString {
         String placemark = placemarkBuilder.toString();
 
         return placemark;
+    }
+
+    private String getIconName(String lastCategory) {
+        /**
+        * getIconName returns a proper icon name from icon preset
+         * it's associated with lastCategory
+         */
+        //todo it should compare LastCategory with data taken from icon preset
+        //todo implement icon preset
+        return null; //todo: don't leave it as null
+    }
+
+    public String getRecord(){
+        return record;
+    }
+
+    public String getLastCategory(){
+        return lastCategory;
     }
 }
