@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="770.0" prefWidth="983.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainWindow">
+   <children>
+      <MenuBar fx:id="Menu" prefHeight="25.0" prefWidth="982.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem fx:id="menuOpenTerminalChoice" mnemonicParsing="false" text="Open Terminal Version" />
+              <MenuItem fx:id="menuCloseChoice" mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem fx:id="menuAboutChoice" mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Language">
+              <items>
+                <MenuItem fx:id="menuLangChoice" mnemonicParsing="false" text="English" />
+                  <MenuItem mnemonicParsing="false" text="Polski" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <StackPane layoutY="24.0" prefHeight="92.0" prefWidth="982.0">
+         <children>
+            <Text layoutX="14.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Load CSV Database" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="16.0" />
+               </StackPane.margin></Text>
+            <Text layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Load Icon Preset" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="71.0" />
+               </StackPane.margin></Text>
+            <Text layoutX="14.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Icon Preset Type" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="44.0" />
+               </StackPane.margin></Text>
+            <TextField fx:id="csvPathTextField" layoutX="144.0" layoutY="12.0" maxHeight="25.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets left="120.0" right="85.0" top="10.0" />
+               </StackPane.margin>
+            </TextField>
+            <TextField fx:id="iconPresetPathTextField" layoutX="144.0" layoutY="59.0" maxHeight="22.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets bottom="1.0" left="120.0" right="85.0" top="65.0" />
+               </StackPane.margin>
+            </TextField>
+            <ComboBox fx:id="presetTypeSelectorCombo" layoutX="144.0" layoutY="34.0" prefHeight="25.0" prefWidth="150.0" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="120.0" right="10.0" top="37.5" />
+               </StackPane.margin></ComboBox>
+            <Button fx:id="presetSelectorButton" layoutX="892.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="10.0" top="60.0" />
+               </StackPane.margin></Button>
+            <Button fx:id="csvSelectorButton" layoutX="892.0" layoutY="58.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="10.0" top="10.0" />
+               </StackPane.margin></Button>
+         </children>
+      </StackPane>
+      <StackPane layoutY="116.0" prefHeight="626.0" prefWidth="495.0">
+         <children>
+            <Text layoutX="17.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of categories in CSV file:" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="50.0" />
+               </StackPane.margin></Text>
+            <TextField fx:id="numCategoriesTextField" layoutX="204.0" layoutY="78.0" maxWidth="50.0" prefHeight="25.0" prefWidth="71.0" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="190.0" top="46.0" />
+               </StackPane.margin></TextField>
+            <Button fx:id="loadDataButton" layoutX="4.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="488.0" text="Load Data" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets left="10.0" right="10.0" top="80.0" />
+               </StackPane.margin></Button>
+            <Button fx:id="processSaveMapButton" layoutX="3.0" layoutY="236.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="488.0" text="Process And Save The Map" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets left="10.0" right="10.0" top="218.0" />
+               </StackPane.margin></Button>
+            <Text layoutX="17.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Output KML File:" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="160.0" />
+               </StackPane.margin></Text>
+            <TextField fx:id="outputPathTextField" layoutX="127.0" layoutY="174.0" prefHeight="22.0" prefWidth="294.0" StackPane.alignment="TOP_LEFT">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets left="125.0" right="85.0" top="155.0" />
+               </StackPane.margin>
+            </TextField>
+            <Button fx:id="outputPathSelectorButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="10.0" top="152.5" />
+               </StackPane.margin>
+            </Button>
+            <Text layoutX="17.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save Also KMZ File" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="188.0" />
+               </StackPane.margin></Text>
+            <RadioButton fx:id="generateKmzRadio" layoutX="127.0" layoutY="208.0" mnemonicParsing="false" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="125.0" top="188.0" />
+               </StackPane.margin></RadioButton>
+            <Label layoutX="48.0" layoutY="539.0" prefHeight="29.0" prefWidth="378.0" textFill="RED" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets top="450.0" />
+               </StackPane.margin>
+               <font>
+                  <Font size="13.0" />
+               </font></Label>
+            <Text layoutX="17.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Preset Path:" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="298.0" />
+               </StackPane.margin></Text>
+            <TextField fx:id="presetToSavePathTextField" layoutX="126.0" layoutY="361.0" prefHeight="25.0" prefWidth="294.0" StackPane.alignment="TOP_CENTER">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets left="125.0" right="85.0" top="293.0" />
+               </StackPane.margin>
+            </TextField>
+            <Button fx:id="savePresetButton" layoutX="3.0" layoutY="394.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="488.0" text="Save Preset" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" right="10.0" top="328.0" />
+               </StackPane.margin></Button>
+            <Button fx:id="presetToSavePathSelectorButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="10.0" top="291.5" />
+               </StackPane.margin>
+            </Button>
+         </children>
+      </StackPane>
+      <StackPane layoutY="744.0" prefHeight="29.0" prefWidth="983.0">
+         <children>
+            <Text fx:id="messageMessageText" fill="#000000b8" strokeType="OUTSIDE" strokeWidth="0.0" text="Message:" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" />
+               </StackPane.margin>
+            </Text>
+            <Label fx:id="messageContentLabel" prefHeight="23.0" prefWidth="902.0" text="Label" StackPane.alignment="CENTER">
+               <StackPane.margin>
+                  <Insets left="70.0" right="10.0" />
+               </StackPane.margin>
+            </Label>
+         </children>
+      </StackPane>
+      <StackPane layoutX="495.0" layoutY="114.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="626.0" prefWidth="489.0">
+      <TableView fx:id="iconCategoryTable" layoutX="491.0" layoutY="116.0" prefHeight="600.0" prefWidth="489.0">
+        <columns>
+          <TableColumn prefWidth="236.0" text="category name" />
+          <TableColumn prefWidth="258.0" text="icon" />
+        </columns>
+      </TableView>
+      </StackPane>
+   </children>
+</AnchorPane>
