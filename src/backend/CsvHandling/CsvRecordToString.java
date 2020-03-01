@@ -1,5 +1,7 @@
 package backend.CsvHandling;
 
+import backend.KmlHandling.IconSet;
+
 import java.util.List;
 
 public class CsvRecordToString {
@@ -8,8 +10,9 @@ public class CsvRecordToString {
     String line, record;
     boolean hasRating, addLastCategory;
     private String lastCategory;
+    private IconSet iconSet;
 
-    public CsvRecordToString(List<String> iconList, int categoriesAmount, int maxRate, String line, boolean hasRating, boolean addLastCategory) {
+    public CsvRecordToString(List<String> iconList, int categoriesAmount, int maxRate, String line, boolean hasRating, boolean addLastCategory, IconSet iconSet) {
         this.iconList = iconList;
         this.categoriesAmount = categoriesAmount;
         this.maxRate = maxRate;
@@ -17,6 +20,7 @@ public class CsvRecordToString {
         this.hasRating = hasRating;
         this.addLastCategory = addLastCategory;
         this.record = getPinData();
+        this.iconSet = iconSet;
     }
 
     private String getPinData(){ //todo: implement 0 categories variant, overload and handle it
@@ -106,9 +110,7 @@ public class CsvRecordToString {
         * getIconName returns a proper icon name from icon preset
          * it's associated with lastCategory
          */
-        //todo it should compare LastCategory with data taken from icon preset
-        //todo implement icon preset
-        return null; //todo: don't leave it as null
+        return iconSet.getIconForCategory(lastCategory);
     }
 
     public String getRecord(){
