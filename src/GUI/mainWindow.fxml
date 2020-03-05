@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="770.0" prefWidth="983.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainWindow">
+<AnchorPane prefHeight="770.0" prefWidth="983.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainWindowController">
    <children>
       <MenuBar fx:id="Menu" prefHeight="25.0" prefWidth="982.0">
         <menus>
@@ -126,7 +126,7 @@
                <StackPane.margin>
                   <Insets left="125.0" top="188.0" />
                </StackPane.margin></RadioButton>
-            <Label layoutX="48.0" layoutY="539.0" prefHeight="29.0" prefWidth="378.0" textFill="RED" StackPane.alignment="TOP_CENTER">
+            <Label fx:id="errorLabel" layoutX="48.0" layoutY="539.0" prefHeight="29.0" prefWidth="378.0" textFill="RED" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
                   <Insets top="450.0" />
                </StackPane.margin>

@@ -35,7 +35,7 @@ public class IconSet {
         return null;//todo: remember to handle this case. user should get an error prompt
     }
 
-    /*todo we currently cold access chooseIconForCategory from code but it should use
+    /*todo we currently could access chooseIconForCategory from code but it should use
     either GUI or a preset file. it should be implemented
      */
 }
