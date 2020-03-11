@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.csv.CSVFormat;
-
 import java.io.FileReader; //this could never happen TODO: implement safety mechanism
 import java.io.IOException;//this could never happen^
 import java.nio.file.Files;
@@ -16,9 +14,7 @@ import java.nio.file.Paths;
 
 public class CsvReader {
     private BufferedReader reader;
-    //private CSVFormat fmt = CSVFormat.EXCEL.withDelimiter(';');
     private List<String> lineList = new ArrayList<String>();
-
     private final static Logger LOGGER = Logger.getLogger(CsvReader.class.getName());
 
     public CsvReader(String csvPath) throws IOException {
@@ -57,6 +53,9 @@ public class CsvReader {
     }
 
     public List<String> getLineList() {
+        /*
+        getLineList() is public but needs readRawCsv() to be executed first to give us a proper output
+         */
         return lineList;
     }
 

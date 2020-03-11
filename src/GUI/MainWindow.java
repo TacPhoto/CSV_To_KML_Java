@@ -17,7 +17,6 @@ public class MainWindow extends Application {
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
 
-
         MainWindowController controller = (MainWindowController) loader.getController();
         controller.setStage(primaryStage);
         primaryStage.setOnCloseRequest((e) -> {MainWindowController.closeProgram();});

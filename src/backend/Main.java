@@ -13,6 +13,9 @@ public class Main {
 
         CsvReader csvReader = new CsvReader("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\short_csv.csv");
         System.out.print(csvReader.getSortedCsvReadyString());
+        csvReader.getSortedCsvReadyString();
+        System.out.println(csvReader.getLineList());
+
 
         OriginalKmlData originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
         System.out.println(originalKmlData.getIconList());
