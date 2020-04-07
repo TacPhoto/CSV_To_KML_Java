@@ -53,9 +53,9 @@ public class CsvReader {
     }
 
     public List<String> getLineList() {
-        /*
-        getLineList() is public but needs readRawCsv() to be executed first to give us a proper output
-         */
+       /**
+        * getLineList() is public but needs readRawCsv() to be executed first to give us a proper output
+        */
         return lineList;
     }
 

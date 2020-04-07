@@ -35,6 +35,14 @@ public class IconSet {
         return null;//todo: remember to handle this case. user should get an error prompt
     }
 
+
+    public String getDebugIcon(String inputCategory){
+        //only for test purposes. all occurrences
+        //of this method in code should be later
+        //renamed to getIconForCategory
+        return "default";
+    }
+
     /*todo we currently could access chooseIconForCategory from code but it should use
     either GUI or a preset file. it should be implemented
      */
