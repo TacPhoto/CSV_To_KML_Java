@@ -63,7 +63,7 @@ public class KmlWriter {
     //todo: implement folder creation
     //todo: implement folder closing
     //todo: implement comparing paths and running folder creation/closing operations based on the result
-    //todo: implement record writting with proper indentation
+    //todo: implement record writing with proper indentation
 
 /*
     private String createFolder(){ //don't do it for the first record to avoid bugs
