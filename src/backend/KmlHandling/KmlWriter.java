@@ -1,5 +1,7 @@
 package backend.KmlHandling;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,6 +37,7 @@ public class KmlWriter {
      * folderCheck-indent-CsvRecordToString-folderCheck-indent-Csv... and so on
      */
 
+    @NotNull
     private String makeIndent(int indentsNum){
         //todo: when functionality is working, it should no longer create a string but directly write into a file
         StringBuilder indent = new StringBuilder("");
@@ -45,6 +48,7 @@ public class KmlWriter {
         return indent.toString();
     }
 
+    @NotNull
     private String getPathForLine(String line){
         int lastFolder = 0;
         int counter = 0;
@@ -64,22 +68,24 @@ public class KmlWriter {
         return pathForLine;
     }
 
+    @NotNull
     private String makeFolder(String folderName){
         return makeIndent(currentIndent++) + "<Folder>\n"
                 + makeIndent(currentIndent) + "<name>" + folderName + "</name>\n";
     }
 
-    private String closeFolder(String folderName){
+    private String closeFolder(){
         return makeIndent(--currentIndent) + "</Folder>";
     }
 
+    @NotNull
     private String recordWithLine(String record){
         /**
          * Returns a single data record with proper indentation
          */
         /*
-        We can add indentation using various ways but as far as I know, using Reader
-        is faster then using .split() or Scanner
+        We can add indentation line by line using various ways but as far as I know,
+        using Reader is faster then using .split() or a Scanner
          */
         StringBuilder finalRecord = new StringBuilder("");
 
@@ -101,6 +107,31 @@ public class KmlWriter {
         return finalRecord.toString();
     }
 
+    @NotNull
+    private String getFolderNameFromPathAt(String path, int index){
+        /**
+         * Returns specific folder name from a path basing on it's index
+         * in hierarchy
+         * Can be used to extract text between X semicolon and X+1 semicolon
+         */
+
+        int counter = 0;
+        StringBuilder folderName = new StringBuilder("");
+
+        for(int i = 0; i < path.length(); i++) {
+            char character = path.charAt(i);
+            if (character == ';') {
+                counter++;
+                if (counter == index)
+                    break;
+            }
+            if (counter == index - 1 && character != ';')
+                folderName.append(character);
+        }
+
+        return folderName.toString();
+    }
+
     //todo: implement comparing paths and running folder creation/closing operations based on the result
     //todo: implement record writing with proper indentation
 
@@ -117,9 +148,18 @@ public class KmlWriter {
         foldersAmount = 3;
         System.out.println(getPathForLine(line1));
 
+        System.out.print("\nThird element from path: ");
+        System.out.print(getFolderNameFromPathAt(line1, 3));
+        System.out.print("\necond element from path: ");
+        System.out.print(getFolderNameFromPathAt(line1, 2));
+        System.out.print("\nFirst element from path: ");
+        System.out.print(getFolderNameFromPathAt(line1, 1));
+
         String testRecord = "\t<Placemark>place\n\t\t<second>test";
-        System.out.println("Final record:");
+        System.out.println("\n\nFinal record:");
         System.out.print(recordWithLine(testRecord));
+
+
 
     }
 }
