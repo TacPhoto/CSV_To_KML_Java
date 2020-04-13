@@ -84,9 +84,15 @@ public class KmlWriter {
         StringBuilder finalRecord = new StringBuilder("");
 
         try (BufferedReader reader = new BufferedReader(new StringReader(record))) {
-            finalRecord.append(makeIndent(currentIndent));
-            finalRecord.append(reader.readLine());
-            finalRecord.append("\n");
+            String currentLine = reader.readLine();
+
+            while(currentLine != null) {
+                finalRecord.append(makeIndent(currentIndent));
+                finalRecord.append(currentLine);
+                finalRecord.append("\n");
+
+                currentLine = reader.readLine();
+            }
         } catch (IOException e) { //should never happen
             System.out.println("recordWithLine has encountered IO error\n" +
                     "check if input string is valid and passed corretly");
@@ -110,7 +116,12 @@ public class KmlWriter {
         System.out.println("PRINT DEBUG PATH");
         foldersAmount = 3;
         System.out.println(getPathForLine(line1));
+
+        String testRecord = "\t<Placemark>place\n\t\t<second>test";
+        System.out.println("Final record:");
+        System.out.print(recordWithLine(testRecord));
+
     }
 }
 
-//TODO: when everything is ready, switch from keeping data int Strings to writting them directly to file (if possible)
+//TODO: when everything is ready, switch from keeping data int Strings to writing them directly to file (if possible)
