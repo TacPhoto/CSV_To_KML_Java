@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.sql.SQLOutput;
 import java.util.List;
 
 public class KmlWriter {
@@ -101,7 +102,7 @@ public class KmlWriter {
             }
         } catch (IOException e) { //should never happen
             System.out.println("recordWithLine has encountered IO error\n" +
-                    "check if input string is valid and passed corretly");
+                    "check if input string is valid and passed correctly");
             e.printStackTrace();
         }
         return finalRecord.toString();
@@ -132,6 +133,25 @@ public class KmlWriter {
         return folderName.toString();
     }
 
+    private int getNumberOfDifferencesBtwnPaths(String firstPath, String secondPath){
+        /**
+        * Returns number of different folders in Paths. It can be used for folder creation
+         * and closing.
+         * It should work fine because the program uses already sorted database and differences
+         * go without huge variation.
+         */
+        int differencesNum = 0;
+
+        if(firstPath.equals(secondPath))
+            return 0;
+
+        for(int i = 0; i < foldersAmount; i++)
+            if( getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)) )
+                differencesNum++;
+
+        return differencesNum;
+    }
+
     //todo: implement comparing paths and running folder creation/closing operations based on the result
     //todo: implement record writing with proper indentation
 
@@ -159,7 +179,10 @@ public class KmlWriter {
         System.out.println("\n\nFinal record:");
         System.out.print(recordWithLine(testRecord));
 
-
+        System.out.println("\n\nPath 1: " + line1 );
+        System.out.println("Path 2: " + line2);
+        System.out.println("Number of different folders: " +
+                getNumberOfDifferencesBtwnPaths(line1, line2));
 
     }
 }
