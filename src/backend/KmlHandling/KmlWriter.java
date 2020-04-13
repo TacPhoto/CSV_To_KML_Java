@@ -1,5 +1,8 @@
 package backend.KmlHandling;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 
 public class KmlWriter {
@@ -7,8 +10,9 @@ public class KmlWriter {
     public String kmlHeader;
     public String outputPath;
     public int categoriesAmount;
-    public int foldersAmount;  //categoriesAmount - 1 because last category is not used to make folders but to assign icon
-    private int currentIndent; //stores current indentation level
+    public int foldersAmount;     //categoriesAmount - 1 because last category is not used to make folders but to assign icon
+    private int currentIndent;    //stores current indentation level. It should not ba affected by base indent in a single record.
+                                  //It should be only affected by Folder indentation level;
 
     public KmlWriter(List<String> lineList, String kmlHeader, int categoriesAmount, String outputPath) {
         this.lineList = lineList;
@@ -60,20 +64,39 @@ public class KmlWriter {
         return pathForLine;
     }
 
-    //todo: implement folder creation
-    //todo: implement folder closing
-    //todo: implement comparing paths and running folder creation/closing operations based on the result
-    //todo: implement record writing with proper indentation
-
-/*
-    private String createFolder(){ //don't do it for the first record to avoid bugs
-        for(int i = foldersAmount - 1; i > 0; i--)
-            //compare paths
-            //for each difference close folders, add indents
-            //for each difference open folders, add indents
+    private String makeFolder(String folderName){
+        return makeIndent(currentIndent++) + "<Folder>\n"
+                + makeIndent(currentIndent) + "<name>" + folderName + "</name>\n";
     }
 
- */
+    private String closeFolder(String folderName){
+        return makeIndent(--currentIndent) + "</Folder>";
+    }
+
+    private String recordWithLine(String record){
+        /**
+         * Returns a single data record with proper indentation
+         */
+        /*
+        We can add indentation using various ways but as far as I know, using Reader
+        is faster then using .split() or Scanner
+         */
+        StringBuilder finalRecord = new StringBuilder("");
+
+        try (BufferedReader reader = new BufferedReader(new StringReader(record))) {
+            finalRecord.append(makeIndent(currentIndent));
+            finalRecord.append(reader.readLine());
+            finalRecord.append("\n");
+        } catch (IOException e) { //should never happen
+            System.out.println("recordWithLine has encountered IO error\n" +
+                    "check if input string is valid and passed corretly");
+            e.printStackTrace();
+        }
+        return finalRecord.toString();
+    }
+
+    //todo: implement comparing paths and running folder creation/closing operations based on the result
+    //todo: implement record writing with proper indentation
 
     public void debugTest(){
         /**
@@ -90,4 +113,4 @@ public class KmlWriter {
     }
 }
 
-//TODO; when everything is ready, switch from keeping data int Strings to writting them directly to file (if possible)
+//TODO: when everything is ready, switch from keeping data int Strings to writting them directly to file (if possible)
