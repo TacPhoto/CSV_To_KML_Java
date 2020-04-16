@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.sql.SQLOutput;
 import java.util.List;
 
 public class KmlWriter {
@@ -111,7 +110,7 @@ public class KmlWriter {
     @NotNull
     private String getFolderNameFromPathAt(String path, int index){
         /**
-         * Returns specific folder name from a path basing on it's index
+         * Returns specific folder name from a path basing on its index
          * in hierarchy
          * Can be used to extract text between X semicolon and X+1 semicolon
          */
@@ -153,7 +152,6 @@ public class KmlWriter {
     }
 
     //todo: implement comparing paths and running folder creation/closing operations based on the result
-    //todo: implement record writing with proper indentation
 
     public void debugTest(){
         /**

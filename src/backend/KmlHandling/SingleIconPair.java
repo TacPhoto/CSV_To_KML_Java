@@ -24,4 +24,8 @@ public class SingleIconPair {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
+    public boolean isValid(){
+        return ( icon != null && category != null);
+    }
 }

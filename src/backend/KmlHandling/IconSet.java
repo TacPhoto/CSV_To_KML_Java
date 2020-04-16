@@ -43,6 +43,14 @@ public class IconSet {
         return "default";
     }
 
+    public boolean isValid(){
+        for(int i = 0; i < pairedIcons.size(); i++) {
+            if(!pairedIcons.get(i).isValid())
+                return false;
+        }
+        return true;
+    }
+
     /*todo we currently could access chooseIconForCategory from code but it should use
     either GUI or a preset file. it should be implemented
      */
