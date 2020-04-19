@@ -1,13 +1,21 @@
 package GUI;
 
+import backend.CsvHandling.CsvReader;
+import backend.KmlHandling.OriginalKmlData;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainWindowController {
     @FXML
@@ -63,6 +71,15 @@ public class MainWindowController {
     private String presetPath;
     private String outputKMLPath;
     private String outputPresetPath;
+    private String kmlHeader;
+
+    private OriginalKmlData originalKmlData;
+
+    private Integer numberOfCategories;
+
+    private List<String> lineList = new ArrayList<String>();
+
+
 
     public static void addControls(AnchorPane pane) {
     }
@@ -80,23 +97,40 @@ public class MainWindowController {
     }
 
     public void selectOutputPresetFile(){
-        outputKMLPath = selectFile().getPath();
-        presetToSavePathTextField.setText(outputKMLPath);
+        try {
+            outputKMLPath = selectFile().getPath();
+            presetToSavePathTextField.setText(outputPresetPath);
+        }catch(Exception e){
+            //case when no file was selected. Ignore
+        }
     }
 
     public void selectOutPutKMLFile(){
-        outputKMLPath = selectFile().getPath();
-        outputPathTextField.setText(outputKMLPath);
+        try {
+            outputKMLPath = selectFile().getPath();
+            outputPathTextField.setText(outputKMLPath);
+        }catch(Exception e){
+            //case when no file was selected. Ignore
+        }
     }
 
     public void selectPresetFile(){
-        presetPath = selectFile().getPath();
-        iconPresetPathTextField.setText(presetPath);
+        try {
+            presetPath = selectFile().getPath();
+            iconPresetPathTextField.setText(presetPath);
+        }
+        catch(Exception e){
+            //case when no file was selected. Ignore
+        }
     }
 
     public void selectCsvFile(){
+        try{
         csvPath = selectFile().getPath();
-        csvPathTextField.setText(csvPath);
+            csvPathTextField.setText(csvPath);}
+        catch(Exception e){
+            //case when no file was selected. Ignore
+        }
     }
 
     public void setPaths(String csvPath
@@ -110,5 +144,54 @@ public class MainWindowController {
         this.outputKMLPath = outputKMLPath;
         this.outputPresetPath = outputPresetPath;
 
+    }
+
+    public Integer getNumberOfCategories() {
+        return numberOfCategories;
+    }
+
+    public void setNumberOfCategories(Integer numberOfCategories) {
+        numberOfCategories = numberOfCategories;
+    }
+
+    public void setListenerForNumOfCategories() {
+        numCategoriesTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable
+                    , String oldValue
+                    , String newValue)
+            {
+                try{
+                    if(StringUtils.isNotBlank(newValue))
+                        numberOfCategories = Integer.parseInt(newValue);
+                }
+                catch (Exception e) {
+                    //that's case when user tries to type nonInteger input
+                    //todo: secure
+                }
+            }
+        });
+    }
+
+    public void loadDataFromCsv() throws Exception {
+        if(csvPath != null) {
+            CsvReader csvReader = new CsvReader(csvPath);
+            csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
+            lineList = csvReader.getLineList();
+
+            if(false) {
+                //todoo: check preset type, run either scan on kml or preset file
+
+                //parse kml as preset
+                originalKmlData = new OriginalKmlData(presetPath);
+                kmlHeader = originalKmlData.getIconsHeader();
+
+                //get icon list
+                List<String> iconList = originalKmlData.getIconList();
+
+            }
+        }
+        else
+            System.out.println("NOT ENOUGH DATA TO PARSE CSV");
     }
 }

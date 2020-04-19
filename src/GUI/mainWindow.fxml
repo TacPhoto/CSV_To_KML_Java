@@ -53,7 +53,7 @@
                <StackPane.margin>
                   <Insets left="10.0" top="44.0" />
                </StackPane.margin></Text>
-            <TextField fx:id="csvPathTextField" layoutX="144.0" layoutY="12.0" maxHeight="25.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
+            <TextField fx:id="csvPathTextField" editable="false" layoutX="144.0" layoutY="12.0" maxHeight="25.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
                <font>
                   <Font size="9.0" />
                </font>
@@ -61,7 +61,7 @@
                   <Insets left="120.0" right="85.0" top="10.0" />
                </StackPane.margin>
             </TextField>
-            <TextField fx:id="iconPresetPathTextField" layoutX="144.0" layoutY="59.0" maxHeight="22.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
+            <TextField fx:id="iconPresetPathTextField" editable="false" layoutX="144.0" layoutY="59.0" maxHeight="22.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
                <font>
                   <Font size="9.0" />
                </font>
@@ -73,11 +73,11 @@
                <StackPane.margin>
                   <Insets left="120.0" right="10.0" top="37.5" />
                </StackPane.margin></ComboBox>
-            <Button fx:id="presetSelectorButton" onAction="#selectPresetFile" layoutX="892.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+            <Button fx:id="presetSelectorButton" layoutX="892.0" layoutY="11.0" mnemonicParsing="false" onAction="#selectPresetFile" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" top="60.0" />
                </StackPane.margin></Button>
-            <Button fx:id="csvSelectorButton" onAction="#selectCsvFile" layoutX="892.0" layoutY="58.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+            <Button fx:id="csvSelectorButton" layoutX="892.0" layoutY="58.0" mnemonicParsing="false" onAction="#selectCsvFile" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" top="10.0" />
                </StackPane.margin></Button>
@@ -93,7 +93,7 @@
                <StackPane.margin>
                   <Insets left="190.0" top="46.0" />
                </StackPane.margin></TextField>
-            <Button fx:id="loadDataButton" layoutX="4.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="488.0" text="Load Data" StackPane.alignment="TOP_CENTER">
+            <Button fx:id="loadDataButton" onAction="#loadDataFromCsv" layoutX="4.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="488.0" text="Load Data" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
                   <Insets left="10.0" right="10.0" top="80.0" />
                </StackPane.margin></Button>
@@ -105,7 +105,7 @@
                <StackPane.margin>
                   <Insets left="10.0" top="160.0" />
                </StackPane.margin></Text>
-            <TextField fx:id="outputPathTextField" layoutX="127.0" layoutY="174.0" prefHeight="22.0" prefWidth="294.0" StackPane.alignment="TOP_LEFT">
+            <TextField fx:id="outputPathTextField" editable="false" layoutX="127.0" layoutY="174.0" prefHeight="22.0" prefWidth="294.0" StackPane.alignment="TOP_LEFT">
                <font>
                   <Font size="9.0" />
                </font>
@@ -113,7 +113,7 @@
                   <Insets left="125.0" right="85.0" top="155.0" />
                </StackPane.margin>
             </TextField>
-            <Button fx:id="outputPathSelectorButton" onAction="#selectOutPutKMLFile" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+            <Button fx:id="outputPathSelectorButton" mnemonicParsing="false" onAction="#selectOutPutKMLFile" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" top="152.5" />
                </StackPane.margin>
@@ -137,7 +137,7 @@
                <StackPane.margin>
                   <Insets left="10.0" top="298.0" />
                </StackPane.margin></Text>
-            <TextField fx:id="presetToSavePathTextField" layoutX="126.0" layoutY="361.0" prefHeight="25.0" prefWidth="294.0" StackPane.alignment="TOP_CENTER">
+            <TextField fx:id="presetToSavePathTextField" editable="false" layoutX="126.0" layoutY="361.0" prefHeight="25.0" prefWidth="294.0" StackPane.alignment="TOP_CENTER">
                <font>
                   <Font size="9.0" />
                </font>
@@ -149,7 +149,7 @@
                <StackPane.margin>
                   <Insets left="10.0" right="10.0" top="328.0" />
                </StackPane.margin></Button>
-            <Button fx:id="presetToSavePathSelectorButton" onAction="#selectOutputPresetFile" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+            <Button fx:id="presetToSavePathSelectorButton" mnemonicParsing="false" onAction="#selectOutputPresetFile" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" top="291.5" />
                </StackPane.margin>

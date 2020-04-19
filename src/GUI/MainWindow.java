@@ -12,6 +12,7 @@ public class MainWindow extends Application {
     String presetPath;
     String outputKMLPath;
     String outputPresetPath;
+    Integer numberOfCategories;
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -27,8 +28,7 @@ public class MainWindow extends Application {
         primaryStage.setOnCloseRequest((e) -> {MainWindowController.closeProgram();});
 
         controller.setPaths(csvPath, presetPath, outputKMLPath, outputPresetPath);
-
-
+        controller.setListenerForNumOfCategories();
 
         primaryStage.show();
 

@@ -1,14 +1,13 @@
 package backend.CsvHandling;
 
-import java.io.BufferedReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.io.FileReader; //this could never happen TODO: implement safety mechanism
-import java.io.IOException;//this could never happen^
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -20,7 +19,7 @@ public class CsvReader {
     public CsvReader(String csvPath) throws IOException {
         LOGGER.setLevel(Level.INFO);
         LOGGER.info("CSV reader initialization. Path used: " + csvPath);
-        this.reader = Files.newBufferedReader(Paths.get(csvPath));
+        this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(csvPath), "utf-8"));
     }
 
     private void csvToStringList() throws IOException {
