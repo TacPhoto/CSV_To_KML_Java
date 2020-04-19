@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
         final Logger LOGGER = Logger.getLogger(Main.class.getName());
         LOGGER.setLevel(Level.INFO);
@@ -27,6 +28,15 @@ public class Main {
         OriginalKmlData originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
         //System.out.println(originalKmlData.getIconList());
         kmlHeader = originalKmlData.getIconsHeader();
+        List<String> iconList = originalKmlData.getIconList();
+
+        //test
+        List<String> lastCategories = new ArrayList<String>();
+        lastCategories.add("first");
+        lastCategories.add("second");
+        lastCategories.add("third");
+
+        IconSet iconSet = new IconSet(iconList, lastCategories);
 
        KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, outputPath);
 

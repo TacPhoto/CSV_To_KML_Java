@@ -4,9 +4,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MainWindow extends Application {
+    String csvPath;
+    String presetPath;
+    String outputKMLPath;
+    String outputPresetPath;
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -21,6 +26,10 @@ public class MainWindow extends Application {
         controller.setStage(primaryStage);
         primaryStage.setOnCloseRequest((e) -> {MainWindowController.closeProgram();});
 
+        controller.setPaths(csvPath, presetPath, outputKMLPath, outputPresetPath);
+
+
+
         primaryStage.show();
 
     }
@@ -29,4 +38,6 @@ public class MainWindow extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }

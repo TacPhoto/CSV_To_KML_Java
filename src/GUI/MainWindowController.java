@@ -4,7 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class MainWindowController {
     @FXML
@@ -54,6 +57,13 @@ public class MainWindowController {
     @FXML
     public TableView iconCategoryTable;
 
+    public Stage primaryStage;
+
+    private String csvPath;
+    private String presetPath;
+    private String outputKMLPath;
+    private String outputPresetPath;
+
     public static void addControls(AnchorPane pane) {
     }
 
@@ -61,5 +71,44 @@ public class MainWindowController {
     }
 
     public void setStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
+    public File selectFile(){
+        FileChooser fileChooser = new FileChooser();
+        return fileChooser.showOpenDialog(primaryStage);
+    }
+
+    public void selectOutputPresetFile(){
+        outputKMLPath = selectFile().getPath();
+        presetToSavePathTextField.setText(outputKMLPath);
+    }
+
+    public void selectOutPutKMLFile(){
+        outputKMLPath = selectFile().getPath();
+        outputPathTextField.setText(outputKMLPath);
+    }
+
+    public void selectPresetFile(){
+        presetPath = selectFile().getPath();
+        iconPresetPathTextField.setText(presetPath);
+    }
+
+    public void selectCsvFile(){
+        csvPath = selectFile().getPath();
+        csvPathTextField.setText(csvPath);
+    }
+
+    public void setPaths(String csvPath
+            , String presetPath
+            , String outputKMLPath
+            , String outputPresetPath
+            ){
+
+        this.csvPath = csvPath;
+        this.presetPath = presetPath;
+        this.outputKMLPath = outputKMLPath;
+        this.outputPresetPath = outputPresetPath;
+
     }
 }

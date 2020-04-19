@@ -51,6 +51,7 @@ public class IconSet {
         return true;
     }
 
+
     /*todo we currently could access chooseIconForCategory from code but it should use
     either GUI or a preset file. it should be implemented
      */
