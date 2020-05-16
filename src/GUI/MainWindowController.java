@@ -2,10 +2,17 @@ package GUI;
 
 import backend.CsvHandling.CsvReader;
 import backend.KmlHandling.OriginalKmlData;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -14,6 +21,7 @@ import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +71,11 @@ public class MainWindowController {
     @FXML
     public Label messageContentLabel;
     @FXML
-    public TableView iconCategoryTable;
+    public TableView<IconsFX> iconCategoryTable;
+    @FXML
+    public TableColumn<IconsFX, String> categoryCol;
+    @FXML
+    public TableColumn<IconsFX, String> iconCol;
 
     public Stage primaryStage;
 
@@ -79,8 +91,6 @@ public class MainWindowController {
 
     private List<String> lineList = new ArrayList<String>();
 
-
-
     public static void addControls(AnchorPane pane) {
     }
 
@@ -91,44 +101,43 @@ public class MainWindowController {
         this.primaryStage = primaryStage;
     }
 
-    public File selectFile(){
+    public File selectFile() {
         FileChooser fileChooser = new FileChooser();
         return fileChooser.showOpenDialog(primaryStage);
     }
 
-    public void selectOutputPresetFile(){
+    public void selectOutputPresetFile() {
         try {
             outputKMLPath = selectFile().getPath();
             presetToSavePathTextField.setText(outputPresetPath);
-        }catch(Exception e){
+        } catch (Exception e) {
             //case when no file was selected. Ignore
         }
     }
 
-    public void selectOutPutKMLFile(){
+    public void selectOutPutKMLFile() {
         try {
             outputKMLPath = selectFile().getPath();
             outputPathTextField.setText(outputKMLPath);
-        }catch(Exception e){
+        } catch (Exception e) {
             //case when no file was selected. Ignore
         }
     }
 
-    public void selectPresetFile(){
+    public void selectPresetFile() {
         try {
             presetPath = selectFile().getPath();
             iconPresetPathTextField.setText(presetPath);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             //case when no file was selected. Ignore
         }
     }
 
-    public void selectCsvFile(){
-        try{
-        csvPath = selectFile().getPath();
-            csvPathTextField.setText(csvPath);}
-        catch(Exception e){
+    public void selectCsvFile() {
+        try {
+            csvPath = selectFile().getPath();
+            csvPathTextField.setText(csvPath);
+        } catch (Exception e) {
             //case when no file was selected. Ignore
         }
     }
@@ -137,7 +146,7 @@ public class MainWindowController {
             , String presetPath
             , String outputKMLPath
             , String outputPresetPath
-            ){
+    ) {
 
         this.csvPath = csvPath;
         this.presetPath = presetPath;
@@ -159,13 +168,11 @@ public class MainWindowController {
             @Override
             public void changed(ObservableValue<? extends String> observable
                     , String oldValue
-                    , String newValue)
-            {
-                try{
-                    if(StringUtils.isNotBlank(newValue))
+                    , String newValue) {
+                try {
+                    if (StringUtils.isNotBlank(newValue))
                         numberOfCategories = Integer.parseInt(newValue);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //that's case when user tries to type nonInteger input
                     //todo: secure
                 }
@@ -174,13 +181,15 @@ public class MainWindowController {
     }
 
     public void loadDataFromCsv() throws Exception {
-        if(csvPath != null) {
+        csvPath = "example_test_files/short_csv.csv";
+
+        if (csvPath != null) {
             CsvReader csvReader = new CsvReader(csvPath);
             csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
             lineList = csvReader.getLineList();
 
-            if(false) {
-                //todoo: check preset type, run either scan on kml or preset file
+            if (false) {
+                //todo: check preset type, run either scan on kml or preset file
 
                 //parse kml as preset
                 originalKmlData = new OriginalKmlData(presetPath);
@@ -189,9 +198,42 @@ public class MainWindowController {
                 //get icon list
                 List<String> iconList = originalKmlData.getIconList();
 
+                prepareIconEditor(csvReader);
             }
-        }
-        else
+
+            //test
+            prepareIconEditor(csvReader);
+        } else
             System.out.println("NOT ENOUGH DATA TO PARSE CSV");
+
+    }
+
+    private void prepareIconEditor(CsvReader csvReader) throws IOException {
+        String sortedCsv = csvReader.getSortedCsvReadyString();
+
+        ArrayList<String> testList = new ArrayList<String>();
+        testList.add("one");
+        testList.add("two");
+        testList.add("default");
+        ArrayList<String> testIconList = new ArrayList<String>();
+        testIconList.add("Ione");
+        testIconList.add("Itwo");
+
+        ObservableList<String> categoriesList = FXCollections.observableArrayList(testList);
+        ObservableList<String> iconList = FXCollections.observableArrayList(testIconList);
+
+        iconCategoryTable.setEditable(true);
+
+        categoryCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("category"));
+        categoryCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(categoriesList));
+
+        iconCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("icon"));
+        iconCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        iconCategoryTable.getItems().add(new IconsFX("default", "default"));
+        iconCategoryTable.refresh();
+
+        System.out.println(categoriesList);
+
     }
 }

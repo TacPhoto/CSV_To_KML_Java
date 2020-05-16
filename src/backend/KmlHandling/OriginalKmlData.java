@@ -1,6 +1,7 @@
 package backend.KmlHandling;
 
 import backend.CsvHandling.CsvReader;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class OriginalKmlData {
     private final static Logger LOGGER = Logger.getLogger(CsvReader.class.getName());
 
 
-    public OriginalKmlData(String kmlPath) throws Exception {
+    public OriginalKmlData(@NotNull String kmlPath) throws Exception {
         LOGGER.setLevel(Level.INFO);
         LOGGER.info("Icon list constructor initialized");
 
