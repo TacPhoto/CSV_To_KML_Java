@@ -82,23 +82,23 @@ public class CsvRecordToString {
         StringBuilder placemarkBuilder = new StringBuilder();
 
         placemarkBuilder.append("\t<Placemark>\n");
-        placemarkBuilder.append("\t\t<name>"+name+"<//name>\n");
-        placemarkBuilder.append("\t\t<description>"+description+"<//description>\n");
+        placemarkBuilder.append("\t\t<name>"+name+"</name>\n");
+        placemarkBuilder.append("\t\t<description>"+description+"</description>\n");
         placemarkBuilder.append("\t\t<LookAt>\n");
-        placemarkBuilder.append("\t\t\t<longitude>"+longitude+"<//longitude>/n"+
-                "\t\t\t<latitude>"+latitude+"<//latitude>\n");
-        placemarkBuilder.append("\t\t\t<altitude>0</altitude>"+
+        placemarkBuilder.append("\t\t\t<longitude>"+longitude+"</longitude>\n"+
+                "\t\t\t<latitude>"+latitude+"</latitude>\n");
+        placemarkBuilder.append("\t\t\t<altitude>0</altitude>\n"+
                 "\t\t\t<heading>7</heading>\n"+
                 "\t\t\t<tilt>0</tilt>\n"+
                 "\t\t\t<range>1108953.793528179</range>\n"+
                 "\t\t\t<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n");
-        placemarkBuilder.append("\t\t<//LookAt>\n");
+        placemarkBuilder.append("\t\t</LookAt>\n");
         placemarkBuilder.append("\t\t<styleUrl>#"+getIconName(lastCategory)+"</styleUrl>\n"); //todo: implement getIconName
         placemarkBuilder.append("\t\t<Point>\n");
         placemarkBuilder.append("\t\t\tgx:drawOrder>1</gx:drawOrder>\n" +
-                "\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>");
-        placemarkBuilder.append("\t\t<//Point>\n");
-        placemarkBuilder.append("\t<//Placemark>\n");
+                "\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>\n");
+        placemarkBuilder.append("\t\t</Point>\n");
+        placemarkBuilder.append("\t</Placemark>\n");
 
         String placemark = placemarkBuilder.toString();
 

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class CsvReader {
     private BufferedReader reader;

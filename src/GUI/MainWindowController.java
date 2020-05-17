@@ -1,6 +1,7 @@
 package GUI;
 
 import backend.CsvHandling.CsvReader;
+import backend.CsvHandling.LastCategoryScanner;
 import backend.KmlHandling.OriginalKmlData;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -181,7 +182,7 @@ public class MainWindowController {
     }
 
     public void loadDataFromCsv() throws Exception {
-        csvPath = "example_test_files/short_csv.csv";
+        csvPath = "example_test_files/short_valid_csv.csv";
 
         if (csvPath != null) {
             CsvReader csvReader = new CsvReader(csvPath);
@@ -211,18 +212,17 @@ public class MainWindowController {
     private void prepareIconEditor(CsvReader csvReader) throws IOException {
         String sortedCsv = csvReader.getSortedCsvReadyString();
 
-        ArrayList<String> testList = new ArrayList<String>();
-        testList.add("one");
-        testList.add("two");
-        testList.add("default");
         ArrayList<String> testIconList = new ArrayList<String>();
         testIconList.add("Ione");
         testIconList.add("Itwo");
 
-        ObservableList<String> categoriesList = FXCollections.observableArrayList(testList);
+        LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, 3, true, true);
+
+
+        ObservableList<String> categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
         ObservableList<String> iconList = FXCollections.observableArrayList(testIconList);
 
-        iconCategoryTable.setEditable(true);
+        iconCategoryTable.setEditable(true); //todo: change to column specific
 
         categoryCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("category"));
         categoryCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(categoriesList));

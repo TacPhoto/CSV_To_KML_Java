@@ -19,7 +19,7 @@ public class Main {
         String outputPath = null;
         int categoriesAmount = 0;
 
-        CsvReader csvReader = new CsvReader("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\short_csv.csv");
+        CsvReader csvReader = new CsvReader("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\short_valid_csv.csv");
         //System.out.print(csvReader.getSortedCsvReadyString());
         csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
         lineList = csvReader.getLineList();
@@ -38,8 +38,11 @@ public class Main {
 
         IconSet iconSet = new IconSet(iconList, lastCategories);
 
+        CsvRecordToString recordWriter = new CsvRecordToString(iconList, 3,5, lineList.get(1), false, true, iconSet);
+        System.out.println(recordWriter.getRecord());
+
        KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, outputPath);
 
-       kmlWriter.debugTest();
+       //kmlWriter.debugTest();
     }
 }

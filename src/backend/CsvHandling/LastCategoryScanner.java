@@ -3,6 +3,7 @@ package backend.CsvHandling;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,7 @@ public class LastCategoryScanner {
      * will find the last available category in csv and save it into a list
      * this list can be used to create an Icon Preset later
      */
-    public List<String> lastCatList; //todo: it can be empty. such case has to be secured
+    public List<String> lastCatList = new ArrayList<String>(); //todo: it can be empty. such case has to be secured
     private String csv; //CsvReader.GetSortedCsvReadyString() should be passed here
     private int categoriesAmount;
     private boolean addLastCategory, hasHeader;
@@ -43,8 +44,9 @@ public class LastCategoryScanner {
         String line=null;
         while( (line = bufReader.readLine()) != null )
         {
-        if(!hasHeader && (i != 0)) //skip header if there is one
-            lastCatList.add(getPossibleCategoryFromLine(line));
+        if(!(hasHeader && (i == 0))) //skip header if there is one
+            this.lastCatList.add(getPossibleCategoryFromLine(line));
+        ++i;
         }
 
         //cleanup the list
