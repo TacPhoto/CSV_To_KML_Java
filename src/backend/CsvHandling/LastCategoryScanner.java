@@ -45,7 +45,7 @@ public class LastCategoryScanner {
         while( (line = bufReader.readLine()) != null )
         {
         if(!(hasHeader && (i == 0))) //skip header if there is one
-            this.lastCatList.add(getPossibleCategoryFromLine(line));
+            this.lastCatList.add(getPossibleCategoryFromLine(line).trim()); //trim prevents whitespace as the first character
         ++i;
         }
 

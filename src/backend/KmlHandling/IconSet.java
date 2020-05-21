@@ -20,27 +20,25 @@ public class IconSet {
         }
     }
 
-    public void chooseIconForCategory(int categoryIndex, String icon){
-        iconList.remove(categoryIndex);
-        iconList.add(categoryIndex, icon);
+    public void setIconForCategoryIndex(int categoryIndex, String icon){
+        pairedIcons.get(categoryIndex).setIcon(icon);
     }
 
     public String getIconForCategory(String inputCategory){
         for(int i = 0; i < pairedIcons.size(); i++){
             String catFromList = pairedIcons.get(i).getCategory();
             if(inputCategory.equals(catFromList)){
-                return catFromList;
+                return pairedIcons.get(i).getIcon();
             }
         }
         return null;//todo: remember to handle this case. user should get an error prompt
     }
 
-
     public String getDebugIcon(String inputCategory){
         //only for test purposes. all occurrences
         //of this method in code should be later
         //renamed to getIconForCategory
-        return "default";
+        return getIconForCategory(inputCategory);
     }
 
     public boolean isValid(){

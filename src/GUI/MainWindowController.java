@@ -2,6 +2,7 @@ package GUI;
 
 import backend.CsvHandling.CsvReader;
 import backend.CsvHandling.LastCategoryScanner;
+import backend.KmlHandling.IconSet;
 import backend.KmlHandling.OriginalKmlData;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -91,6 +92,10 @@ public class MainWindowController {
     private Integer numberOfCategories;
 
     private List<String> lineList = new ArrayList<String>();
+    ObservableList<String> categoriesList;
+    ObservableList<String> iconList;
+
+    private IconSet iconSet;
 
     public static void addControls(AnchorPane pane) {
     }
@@ -209,6 +214,22 @@ public class MainWindowController {
 
     }
 
+    private void prepareIconSetBasedOnTable(){
+        /** prepareIconSetBasedOnTable will clean iconSet up and initialize it again
+         * then it will set proper categories basing on data from table
+         */
+
+        //System.out.println(categoryCol.getCellObservableValue(0).getValue().toString());
+        //System.out.println(iconCol.getCellObservableValue(0).getValue().toString());
+        iconSet = new IconSet(iconList, categoriesList);
+
+        for(int i = 0; i < categoriesList.size(); i++){
+            iconSet.setIconForCategoryIndex(i, iconCol.getCellObservableValue(i).getValue());
+        }
+
+        System.out.println(iconSet.getDebugIcon("big"));
+    }
+
     private void prepareIconEditor(CsvReader csvReader) throws IOException {
         String sortedCsv = csvReader.getSortedCsvReadyString();
 
@@ -218,22 +239,25 @@ public class MainWindowController {
 
         LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, 3, true, true);
 
-
-        ObservableList<String> categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
-        ObservableList<String> iconList = FXCollections.observableArrayList(testIconList);
+        categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
+        iconList = FXCollections.observableArrayList(testIconList);
 
         iconCategoryTable.setEditable(true); //todo: change to column specific
 
         categoryCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("category"));
-        categoryCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(categoriesList));
+        //categoryCol.setCellFactory(TextFieldTableCell.forTableColumn(categoriesList));
 
         iconCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("icon"));
-        iconCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        iconCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(iconList));
 
-        iconCategoryTable.getItems().add(new IconsFX("default", "default"));
+        iconCategoryTable.getItems().add(new IconsFX("capital", "Ione"));
+        iconCategoryTable.getItems().add(new IconsFX("big", "Itwo"));
+        iconCategoryTable.getItems().add(new IconsFX("small", "Itwo"));
         iconCategoryTable.refresh();
 
         System.out.println(categoriesList);
-
+        System.out.println();
+        prepareIconSetBasedOnTable();
+        System.out.println("test end");
     }
 }
