@@ -230,7 +230,12 @@ public class MainWindowController {
         System.out.println(iconSet.getDebugIcon("big"));
     }
 
-    private void prepareIconEditor(CsvReader csvReader) throws IOException {
+    private void updateIconsFromKML(){
+        //does no need additional List cleanup
+        iconList = FXCollections.observableArrayList(originalKmlData.getIconList());
+    }
+
+    private void prepareIconEditor(CsvReader csvReader) throws Exception {
         String sortedCsv = csvReader.getSortedCsvReadyString();
 
         ArrayList<String> testIconList = new ArrayList<String>();
@@ -239,20 +244,25 @@ public class MainWindowController {
 
         LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, 3, true, true);
 
-        categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
-        iconList = FXCollections.observableArrayList(testIconList);
+        ///TEST, should be done elsewhere
+        originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
+        kmlHeader = originalKmlData.getIconsHeader();
+        ///
 
-        iconCategoryTable.setEditable(true); //todo: change to column specific
+        categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
+        updateIconsFromKML();
+
+        iconCategoryTable.setEditable(true);
+        categoryCol.setEditable(false);
 
         categoryCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("category"));
-        //categoryCol.setCellFactory(TextFieldTableCell.forTableColumn(categoriesList));
 
         iconCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("icon"));
         iconCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(iconList));
 
-        iconCategoryTable.getItems().add(new IconsFX("capital", "Ione"));
-        iconCategoryTable.getItems().add(new IconsFX("big", "Itwo"));
-        iconCategoryTable.getItems().add(new IconsFX("small", "Itwo"));
+        iconCategoryTable.getItems().add(new IconsFX("capital", "default"));
+        iconCategoryTable.getItems().add(new IconsFX("big", "default"));
+        iconCategoryTable.getItems().add(new IconsFX("small", "default"));
         iconCategoryTable.refresh();
 
         System.out.println(categoriesList);
