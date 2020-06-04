@@ -105,6 +105,12 @@ public class MainWindowController {
 
     public void setStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+
+        final ObservableList<String> iconSetPresetTypes = FXCollections.observableArrayList(
+                "Created manually",
+                "From preset file"
+        );
+        presetTypeSelectorCombo.setItems(iconSetPresetTypes);
     }
 
     public File selectFile() {
@@ -218,15 +224,13 @@ public class MainWindowController {
         /** prepareIconSetBasedOnTable will clean iconSet up and initialize it again
          * then it will set proper categories basing on data from table
          */
-
+        //todo: remove this method later. it's redundant
         //System.out.println(categoryCol.getCellObservableValue(0).getValue().toString());
         //System.out.println(iconCol.getCellObservableValue(0).getValue().toString());
         iconSet = new IconSet(iconList, categoriesList);
+        iconSet.generateIconSetFromData();
 
-        for(int i = 0; i < categoriesList.size(); i++){
-            iconSet.setIconForCategoryIndex(i, iconCol.getCellObservableValue(i).getValue());
-        }
-
+        //TEST
         System.out.println(iconSet.getDebugIcon("big"));
     }
 
@@ -267,7 +271,7 @@ public class MainWindowController {
 
         System.out.println(categoriesList);
         System.out.println();
-        prepareIconSetBasedOnTable();
+        prepareIconSetBasedOnTable(); //todo: add reading iconset preset from file
         System.out.println("test end");
     }
 }

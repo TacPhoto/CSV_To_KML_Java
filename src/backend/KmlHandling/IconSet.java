@@ -1,11 +1,14 @@
 package backend.KmlHandling;
 
+import javafx.collections.FXCollections;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class IconSet {
     public List<String> iconList;
     public List<SingleIconPair> pairedIcons = new ArrayList<SingleIconPair>();
+    public int nbOfAvailableCategories;
 
     public IconSet(List<String> iconList, List<String> availableCategories) {
         /**
@@ -14,7 +17,7 @@ public class IconSet {
          */
         this.iconList = iconList;
 
-        int nbOfAvailableCategories = availableCategories.size();
+        nbOfAvailableCategories = availableCategories.size();
         for(int i = 0; i < nbOfAvailableCategories; i++) {
             this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
         }
@@ -47,6 +50,30 @@ public class IconSet {
                 return false;
         }
         return true;
+    }
+
+    public void generateIconSetFromData(){
+        for(int i = 0; i < nbOfAvailableCategories; i++){
+            //iconSet.setIconForCategoryIndex(i, iconCol.getCellObservableValue(i).getValue());
+            setIconForCategoryIndex(i, FXCollections.observableArrayList(iconList).get(i));
+
+        }
+    }
+
+    private void cleanupIconSetData(){
+        pairedIcons.clear();
+    }
+
+    public void saveIconSetPresetFile(String path){//path or FILE object
+        //todo: implement
+    }
+
+    public void validateIconSetPresetFile(String path){//path or FILE object
+        //todo: implement
+    }
+
+    public void readIconSetPresetFile(String path){//path or FILE object
+        //todo: implement
     }
 
 
