@@ -2,6 +2,7 @@ package backend;
 
 import backend.CsvHandling.*;
 import backend.KmlHandling.*;
+import backend.Misc.IconSet;
 
 import java.util.ArrayList;
 import java.util.List;

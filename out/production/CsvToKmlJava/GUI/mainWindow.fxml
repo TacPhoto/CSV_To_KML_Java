@@ -63,7 +63,7 @@
             </TextField>
             <TextField fx:id="iconPresetPathTextField" editable="false" layoutX="144.0" layoutY="59.0" maxHeight="22.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
                <font>
-                  <Font size="9.0" />
+                   <Font size="9.0" />
                </font>
                <StackPane.margin>
                   <Insets bottom="1.0" left="120.0" right="85.0" top="65.0" />

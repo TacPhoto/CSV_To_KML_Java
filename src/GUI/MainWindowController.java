@@ -2,9 +2,8 @@ package GUI;
 
 import backend.CsvHandling.CsvReader;
 import backend.CsvHandling.LastCategoryScanner;
-import backend.KmlHandling.IconSet;
+import backend.Misc.IconSet;
 import backend.KmlHandling.OriginalKmlData;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -12,9 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -22,8 +19,6 @@ import javafx.stage.Stage;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 

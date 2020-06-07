@@ -1,4 +1,4 @@
-package backend.KmlHandling;
+package backend.Misc;
 
 public class SingleIconPair {
     public String category;

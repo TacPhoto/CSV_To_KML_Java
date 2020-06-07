@@ -17,7 +17,10 @@ public class CsvReader {
     public CsvReader(String csvPath) throws IOException {
         LOGGER.setLevel(Level.INFO);
         LOGGER.info("CSV reader initialization. Path used: " + csvPath);
-        this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(csvPath), "utf-8"));
+        this.reader = new BufferedReader
+                (new InputStreamReader
+                        (new FileInputStream(csvPath), "utf-8")
+                );
     }
 
     private void csvToStringList() throws IOException {

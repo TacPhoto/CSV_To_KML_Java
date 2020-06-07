@@ -1,7 +1,8 @@
-package backend.KmlHandling;
+package backend.Misc;
 
 import javafx.collections.FXCollections;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,16 +65,64 @@ public class IconSet {
         pairedIcons.clear();
     }
 
-    public void saveIconSetPresetFile(String path){//path or FILE object
+    public void saveIconSetPresetFile(String path) throws IOException {//path or FILE object
+        final PrintWriter writer = new PrintWriter
+                (new BufferedWriter(
+                        new OutputStreamWriter
+                                (new FileOutputStream(path), "utf-8")
+                ));
+
+        for (int i = 0; i < nbOfAvailableCategories; i++) {
+            writer.write(pairedIcons.get(i).category + ';' + pairedIcons.get(i).icon);
+        }
+        writer.close();
+    }
+
+    private List<String> getStringListFromCsv(BufferedReader reader) {
+        final List<String> lineList = new ArrayList<String>();
+
+        try {
+            String line;
+            while ((line = reader.readLine()) != null)
+                lineList.add(line);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return lineList;
+    }
+
+    private String getCategoryFromCsvLine(String line){
+        return line.split(";")[0];
+    }
+
+    private String getIconFromCsvLine(String line){
+        return line.split(";")[1];
+    }
+
+    private List<SingleIconPair> getCategoriesFromCsvList(List<String> lineList){
+        List<SingleIconPair> tempPairedIcons = new ArrayList<SingleIconPair>();
+
+        for(int i = 0; i < lineList.size(); i++) {
+            String line = lineList.get(i);
+            tempPairedIcons.add(i, new SingleIconPair(getCategoryFromCsvLine(line), getIconFromCsvLine(line)));
+        }
+
+        return tempPairedIcons;
+    }
+
+    public void validateIconSetPresetFile(String path){
         //todo: implement
     }
 
-    public void validateIconSetPresetFile(String path){//path or FILE object
-        //todo: implement
-    }
+    public void readIconSetPresetFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
+        cleanupIconSetData();
 
-    public void readIconSetPresetFile(String path){//path or FILE object
-        //todo: implement
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
+
+        ArrayList<String> lineList = (ArrayList<String>) getStringListFromCsv(reader);
+        nbOfAvailableCategories = lineList.size();
+        pairedIcons = getCategoriesFromCsvList(lineList);
     }
 
 

@@ -1,6 +1,6 @@
 package backend.CsvHandling;
 
-import backend.KmlHandling.IconSet;
+import backend.Misc.IconSet;
 
 import java.util.List;
 
