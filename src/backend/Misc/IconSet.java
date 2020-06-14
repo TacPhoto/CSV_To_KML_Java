@@ -3,25 +3,38 @@ package backend.Misc;
 import javafx.collections.FXCollections;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IconSet {
+    private final static Logger LOGGER = Logger.getLogger(IconSet.class.getName());
     public List<String> iconList;
-    public List<SingleIconPair> pairedIcons = new ArrayList<SingleIconPair>();
+    public ArrayList<SingleIconPair> pairedIcons = new ArrayList<SingleIconPair>();
     public int nbOfAvailableCategories;
 
     public IconSet(List<String> iconList, List<String> availableCategories) {
         /**
-        * IconSet is meant for storing list of paired categories and icon names
-        * it can return an icon name for a given category or set one.
+         * IconSet is meant for storing list of paired categories and icon names
+         * it can return an icon name for a given category or set one.
+         *
+         * It always has to be initialized with proper data because it's used for validating
+         * the preset file data before IconSet is overridden with it
          */
+        LOGGER.setLevel(Level.INFO);
+
         this.iconList = iconList;
 
         nbOfAvailableCategories = availableCategories.size();
         for(int i = 0; i < nbOfAvailableCategories; i++) {
             this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
         }
+
+        generateIconSetFromData();
     }
 
     public void setIconForCategoryIndex(int categoryIndex, String icon){
@@ -55,7 +68,6 @@ public class IconSet {
 
     public void generateIconSetFromData(){
         for(int i = 0; i < nbOfAvailableCategories; i++){
-            //iconSet.setIconForCategoryIndex(i, iconCol.getCellObservableValue(i).getValue());
             setIconForCategoryIndex(i, FXCollections.observableArrayList(iconList).get(i));
 
         }
@@ -78,8 +90,8 @@ public class IconSet {
         writer.close();
     }
 
-    private List<String> getStringListFromCsv(BufferedReader reader) {
-        final List<String> lineList = new ArrayList<String>();
+    private ArrayList<String> getStringListFromCsv(BufferedReader reader) {
+        final ArrayList<String> lineList = new ArrayList<String>();
 
         try {
             String line;
@@ -100,8 +112,8 @@ public class IconSet {
         return line.split(";")[1];
     }
 
-    private List<SingleIconPair> getCategoriesFromCsvList(List<String> lineList){
-        List<SingleIconPair> tempPairedIcons = new ArrayList<SingleIconPair>();
+    private ArrayList<SingleIconPair> getCategoriesFromCsvList(List<String> lineList){
+        ArrayList<SingleIconPair> tempPairedIcons = new ArrayList<SingleIconPair>();
 
         for(int i = 0; i < lineList.size(); i++) {
             String line = lineList.get(i);
@@ -111,22 +123,104 @@ public class IconSet {
         return tempPairedIcons;
     }
 
-    public void validateIconSetPresetFile(String path){
-        //todo: implement
+    public boolean isValidIconSetPresetFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
+        //todo: apply more dry-coding for reading and validating iconSetPreset files
+        // they could avoid reading files for multiple time, single one would be enough
+        // maybe create a separate temp object for such data from file and use it for validation
+        // and copying data to the actual iconSet?
+        LOGGER.info("IconSetPresetFile validation started");
+
+        Path filePath = Paths.get(path);
+        List<SingleIconPair> tempPairedIcons = new ArrayList<SingleIconPair>();
+        ArrayList<String> lineList;
+
+        if(!Files.exists(filePath)){
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File does not exist");
+            return false;
+        }
+
+        if(!Files.isReadable(filePath)){
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File is not readable");
+            return false;
+        }
+
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
+
+        try {
+            lineList = getStringListFromCsv(reader);
+        }catch(Exception e){
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail on reading the file");
+            LOGGER.log(Level.WARNING, "Exception log:\n");
+            e.printStackTrace();
+
+            return false;
+        }
+
+        if(!(nbOfAvailableCategories == lineList.size())) {
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. Number of available categories does not match length of categories in the file");
+            return false;
+        }
+
+        try{
+        tempPairedIcons = getCategoriesFromCsvList(lineList);
+        }catch (Exception e){
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail on extracting icon and category data from line list form of preset file");
+            LOGGER.log(Level.WARNING, "Exception log:\n");
+            e.printStackTrace();
+
+            return false;
+        }
+
+        {
+            boolean isValidCategoryData = false;
+            for (int i = 0; i < nbOfAvailableCategories; i++) {
+                for (int j = 0; j < pairedIcons.size(); j++) {
+                    if (pairedIcons.get(j).category.equals(tempPairedIcons.get(i).category)) {
+                        isValidCategoryData = true;
+                        break;
+                    }
+                }
+            }
+            if (isValidCategoryData == false) {
+                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail, data from preset file does not match categories from csv database");
+                return false;
+            }
+        }
+
+        {
+            boolean isValidIconData = false;
+            for (int i = 0; i < nbOfAvailableCategories; i++) {
+                for (int j = 0; j < pairedIcons.size(); j++) {
+                    if (pairedIcons.get(j).icon.equals(tempPairedIcons.get(i).icon)) {
+                        isValidIconData = true;
+                        break;
+                    }
+                }
+            }
+            if (isValidIconData == false) {
+                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail, data from preset file does not match icons from kml map");
+                return false;
+            }
+        }
+
+        LOGGER.info("IconSetPresetFile validation finished Passed");
+        return true;
     }
 
     public void readIconSetPresetFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
+        if(!isValidIconSetPresetFile(path)){
+            return;
+        }
+
         cleanupIconSetData();
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
 
-        ArrayList<String> lineList = (ArrayList<String>) getStringListFromCsv(reader);
+        ArrayList<String> lineList = getStringListFromCsv(reader);
         nbOfAvailableCategories = lineList.size();
         pairedIcons = getCategoriesFromCsvList(lineList);
     }
-
-
-    /*todo we currently could access chooseIconForCategory from code but it should use
-    either GUI or a preset file. it should be implemented
-     */
+    
+    //todo we currently could access chooseIconForCategory from code but it should use
+    // either GUI or a preset file. it should be implemented
 }

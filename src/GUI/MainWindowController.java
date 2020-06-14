@@ -215,20 +215,6 @@ public class MainWindowController {
 
     }
 
-    private void prepareIconSetBasedOnTable(){
-        /** prepareIconSetBasedOnTable will clean iconSet up and initialize it again
-         * then it will set proper categories basing on data from table
-         */
-        //todo: remove this method later. it's redundant
-        //System.out.println(categoryCol.getCellObservableValue(0).getValue().toString());
-        //System.out.println(iconCol.getCellObservableValue(0).getValue().toString());
-        iconSet = new IconSet(iconList, categoriesList);
-        iconSet.generateIconSetFromData();
-
-        //TEST
-        System.out.println(iconSet.getDebugIcon("big"));
-    }
-
     private void updateIconsFromKML(){
         //does no need additional List cleanup
         iconList = FXCollections.observableArrayList(originalKmlData.getIconList());
@@ -266,7 +252,8 @@ public class MainWindowController {
 
         System.out.println(categoriesList);
         System.out.println();
-        prepareIconSetBasedOnTable(); //todo: add reading iconset preset from file
+        iconSet = new IconSet(iconList, categoriesList);
+        System.out.println(iconSet.getDebugIcon("big"));
         System.out.println("test end");
     }
 }
