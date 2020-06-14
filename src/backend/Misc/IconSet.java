@@ -172,35 +172,38 @@ public class IconSet {
         }
 
         {
-            boolean isValidCategoryData = false;
+            boolean isValidCategoryData;
             for (int i = 0; i < nbOfAvailableCategories; i++) {
+                isValidCategoryData = false;
                 for (int j = 0; j < pairedIcons.size(); j++) {
                     if (pairedIcons.get(j).category.equals(tempPairedIcons.get(i).category)) {
                         isValidCategoryData = true;
                         break;
                     }
                 }
-            }
-            if (isValidCategoryData == false) {
-                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail, data from preset file does not match categories from csv database");
-                return false;
+                if (!isValidCategoryData) {
+                    LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail, data from preset file does not match categories from csv database");
+                    return false;
+                }
             }
         }
 
         {
-            boolean isValidIconData = false;
+            boolean isValidIconData;
             for (int i = 0; i < nbOfAvailableCategories; i++) {
+                isValidIconData = false;
                 for (int j = 0; j < pairedIcons.size(); j++) {
                     if (pairedIcons.get(j).icon.equals(tempPairedIcons.get(i).icon)) {
                         isValidIconData = true;
                         break;
                     }
                 }
+                if (!isValidIconData) {
+                    LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail, data from preset file does not match icons from kml map");
+                    return false;
+                }
             }
-            if (isValidIconData == false) {
-                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail, data from preset file does not match icons from kml map");
-                return false;
-            }
+
         }
 
         LOGGER.info("IconSetPresetFile validation finished Passed");
@@ -220,7 +223,7 @@ public class IconSet {
         nbOfAvailableCategories = lineList.size();
         pairedIcons = getCategoriesFromCsvList(lineList);
     }
-    
+
     //todo we currently could access chooseIconForCategory from code but it should use
     // either GUI or a preset file. it should be implemented
 }
