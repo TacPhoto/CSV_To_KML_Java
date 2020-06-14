@@ -226,4 +226,9 @@ public class IconSet {
 
     //todo we currently could access chooseIconForCategory from code but it should use
     // either GUI or a preset file. it should be implemented
+
+    //TODO IMPORTANT
+    // IconSetPreset should be able to contain a KML header
+    // creating the IconSet from the preset, saving it and validating has to be updated later
+    // when other things are in a better condition
 }
