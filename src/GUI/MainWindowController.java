@@ -245,15 +245,28 @@ public class MainWindowController {
         iconCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("icon"));
         iconCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(iconList));
 
+        /*
         iconCategoryTable.getItems().add(new IconsFX("capital", "default"));
         iconCategoryTable.getItems().add(new IconsFX("big", "default"));
         iconCategoryTable.getItems().add(new IconsFX("small", "default"));
         iconCategoryTable.refresh();
+        */
 
         System.out.println(categoriesList);
         System.out.println();
-        iconSet = new IconSet(iconList, categoriesList);
+        //iconSet = new IconSet(iconList, categoriesList);
+        iconSet = new IconSet("example_test_files/testPreset.txt", categoriesList);
+/*
+        iconCategoryTable.getItems().add(new IconsFX("big",iconSet.getIconForCategory("big")));
+        iconCategoryTable.getItems().add(new IconsFX("small",iconSet.getIconForCategory("big")));
+        iconCategoryTable.getItems().add(new IconsFX("capital",iconSet.getIconForCategory("big")));
+*/
+        iconCategoryTable.refresh();
+
+
         System.out.println(iconSet.getDebugIcon("big"));
         System.out.println("test end");
+
+        iconSet.saveIconSetPresetFile("example_test_files/testPreset2.txt");
     }
 }

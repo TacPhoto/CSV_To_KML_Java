@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -75,6 +76,24 @@ public class OriginalKmlData {
             throw new Exception("No icon data found in header, KML file is invalid");
 
         listCleanup();
+    }
+
+    public void removeIconSetPresetData() throws IOException {
+        /**
+         *If KML Header was extracted from IconSet preset file then it likely contains some additional data
+         * this method will clean it up
+         */
+        StringBuilder finalStringBuilder= new StringBuilder("");
+
+        String[] lines = this.IconsHeader.split("\n");
+
+        for(String line : lines){
+            if((line.contains("<") && line.contains(">") && !line.contains(";"))){
+                finalStringBuilder.append(line).append("\n");
+            }
+        }
+
+        this.IconsHeader = finalStringBuilder.toString();
     }
 
     private void listCleanup() {

@@ -1,5 +1,7 @@
 package backend.Misc;
 
+import backend.CsvHandling.LastCategoryScanner;
+import backend.KmlHandling.OriginalKmlData;
 import javafx.collections.FXCollections;
 
 import java.io.*;
@@ -16,14 +18,15 @@ public class IconSet {
     public List<String> iconList;
     public ArrayList<SingleIconPair> pairedIcons = new ArrayList<SingleIconPair>();
     public int nbOfAvailableCategories;
+    public String kmlHeader = "";
 
     public IconSet(List<String> iconList, List<String> availableCategories) {
         /**
          * IconSet is meant for storing list of paired categories and icon names
          * it can return an icon name for a given category or set one.
          *
-         * It always has to be initialized with proper data because it's used for validating
-         * the preset file data before IconSet is overridden with it
+         * Even if it's going to read data from preset file, it has to be fed with csv data
+         * because it will be used for preset file validation
          */
         LOGGER.setLevel(Level.INFO);
 
@@ -35,6 +38,25 @@ public class IconSet {
         }
 
         generateIconSetFromData();
+    }
+
+    public IconSet(String iconSetPresetFilePath,  List<String> availableCategories) throws Exception {
+        LOGGER.setLevel(Level.INFO);
+
+        OriginalKmlData originalKmlData = new OriginalKmlData(iconSetPresetFilePath);
+        originalKmlData.removeIconSetPresetData();
+        this.kmlHeader = originalKmlData.getIconsHeader();
+        this.iconList = originalKmlData.getIconList();
+
+
+        nbOfAvailableCategories = availableCategories.size();
+        for(int i = 0; i < nbOfAvailableCategories; i++) {
+            this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
+        }
+
+        generateIconSetFromData();
+
+        readIconSetPresetFile(iconSetPresetFilePath);
     }
 
     public void setIconForCategoryIndex(int categoryIndex, String icon){
@@ -84,10 +106,26 @@ public class IconSet {
                                 (new FileOutputStream(path), "utf-8")
                 ));
 
+        writer.write(kmlHeader);
+
         for (int i = 0; i < nbOfAvailableCategories; i++) {
-            writer.write(pairedIcons.get(i).category + ';' + pairedIcons.get(i).icon);
+            writer.write(pairedIcons.get(i).category + ';' + pairedIcons.get(i).icon + "\n");
         }
         writer.close();
+    }
+
+    private void deleteHeaderFromLineList(ArrayList<String> lineList){
+        while(true){
+            String line = lineList.get(0);
+            if(line.contains("<") && line.contains(">") && !line.contains(";")){
+                lineList.remove(0);
+            }
+            else
+            {
+                return;
+            }
+        }
+
     }
 
     private ArrayList<String> getStringListFromCsv(BufferedReader reader) {
@@ -156,10 +194,18 @@ public class IconSet {
             return false;
         }
 
+        if(!lineList.get(0).contains("<?xml version") || !lineList.get(1).contains("kml")){
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File does not contain KML Header");
+            return false;
+        }
+
+        deleteHeaderFromLineList(lineList); //deletes KML header from the line list. It is important step, without it validation below will always fail
+
         if(!(nbOfAvailableCategories == lineList.size())) {
             LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. Number of available categories does not match length of categories in the file");
             return false;
         }
+
 
         try{
         tempPairedIcons = getCategoriesFromCsvList(lineList);
@@ -220,15 +266,8 @@ public class IconSet {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
 
         ArrayList<String> lineList = getStringListFromCsv(reader);
+        deleteHeaderFromLineList(lineList);
         nbOfAvailableCategories = lineList.size();
         pairedIcons = getCategoriesFromCsvList(lineList);
     }
-
-    //todo we currently could access chooseIconForCategory from code but it should use
-    // either GUI or a preset file. it should be implemented
-
-    //TODO IMPORTANT
-    // IconSetPreset should be able to contain a KML header
-    // creating the IconSet from the preset, saving it and validating has to be updated later
-    // when other things are in a better condition
 }
