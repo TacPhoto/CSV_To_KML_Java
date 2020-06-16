@@ -37,13 +37,14 @@ public class Main {
         lastCategories.add("second");
         lastCategories.add("third");
 
+        //IconSet iconSet = new IconSet("example_test_files/testPreset.txt", lastCategories);
         IconSet iconSet = new IconSet(iconList, lastCategories);
 
         CsvRecordToString recordWriter = new CsvRecordToString(iconList, 3,5, lineList.get(1), false, true, iconSet);
         System.out.println(recordWriter.getRecord());
 
-       KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, outputPath);
+        KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, outputPath);
 
-       //kmlWriter.debugTest();
+       kmlWriter.debugTest();
     }
 }

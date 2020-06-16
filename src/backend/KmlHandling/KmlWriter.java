@@ -159,6 +159,7 @@ public class KmlWriter {
          * This method should not be used on production
          * Beware of overriding class variables by the method!!!
          */
+        /*
         String line1 = "geo;cities;pl;warsaw;pl";
         String line2 = "geo;cities;rus;moscow;rus";
 
@@ -181,6 +182,10 @@ public class KmlWriter {
         System.out.println("Path 2: " + line2);
         System.out.println("Number of different folders: " +
                 getNumberOfDifferencesBtwnPaths(line1, line2));
+        */
+
+        System.out.println(kmlHeader);
+        System.out.println();
 
     }
 }

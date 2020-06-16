@@ -37,7 +37,9 @@ public class IconSet {
             this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
         }
 
-        generateIconSetFromData();
+        for(int i = 0; i < nbOfAvailableCategories; i++){
+            setIconForCategoryIndex(i, "s_ylw-pushpin"); //set all icons to default
+        }
     }
 
     public IconSet(String iconSetPresetFilePath,  List<String> availableCategories) throws Exception {
@@ -59,6 +61,10 @@ public class IconSet {
         readIconSetPresetFile(iconSetPresetFilePath);
     }
 
+    public String getKmlHeader() {
+        return kmlHeader;
+    }
+
     public void setIconForCategoryIndex(int categoryIndex, String icon){
         pairedIcons.get(categoryIndex).setIcon(icon);
     }
@@ -70,7 +76,8 @@ public class IconSet {
                 return pairedIcons.get(i).getIcon();
             }
         }
-        return null;//todo: remember to handle this case. user should get an error prompt
+        return "s_ylw-pushpin";//todo: remember to handle this case. user should get an error prompt
+                               // currently fallbacks to default
     }
 
     public String getDebugIcon(String inputCategory){
@@ -91,7 +98,6 @@ public class IconSet {
     public void generateIconSetFromData(){
         for(int i = 0; i < nbOfAvailableCategories; i++){
             setIconForCategoryIndex(i, FXCollections.observableArrayList(iconList).get(i));
-
         }
     }
 

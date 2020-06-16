@@ -13,6 +13,7 @@ public class CsvRecordToString {
     private IconSet iconSet;
 
     public CsvRecordToString(List<String> iconList, int categoriesAmount, int maxRate, String line, boolean hasRating, boolean addLastCategory, IconSet iconSet) {
+        this.iconSet = iconSet;
         this.iconList = iconList;
         this.categoriesAmount = categoriesAmount;
         this.maxRate = maxRate;
@@ -20,7 +21,6 @@ public class CsvRecordToString {
         this.hasRating = hasRating;
         this.addLastCategory = addLastCategory;
         this.record = getPinData();
-        this.iconSet = iconSet;
     }
 
     private String getPinData(){ //todo: implement 0 categories variant, overload and handle it
@@ -110,7 +110,8 @@ public class CsvRecordToString {
         * getIconName returns a proper icon name from icon preset
          * it's associated with lastCategory
          */
-        return iconSet.getIconForCategory(lastCategory);
+        System.out.println(iconSet.toString());
+        return this.iconSet.getIconForCategory(lastCategory);
     }
 
     public String getRecord(){
