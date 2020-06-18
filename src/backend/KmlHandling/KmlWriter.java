@@ -1,5 +1,7 @@
 package backend.KmlHandling;
 
+import backend.CsvHandling.CsvRecordToString;
+import backend.CsvHandling.CsvRecordToStringInitData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -15,13 +17,18 @@ public class KmlWriter {
     public int foldersAmount;     //categoriesAmount - 1 because last category is not used to make folders but to assign icon
     private int currentIndent;    //stores current indentation level. It should not ba affected by base indent in a single record.
                                   //It should be only affected by Folder indentation level;
+    private CsvRecordToStringInitData csvRecordToStringInitData;
+    private CsvRecordToString csvRecordToString;
 
-    public KmlWriter(List<String> lineList, String kmlHeader, int categoriesAmount, String outputPath) {
+    public KmlWriter(List<String> lineList, String kmlHeader, int categoriesAmount, String outputPath, CsvRecordToStringInitData csvRecordToStringInitData) {
         this.lineList = lineList;
         this.kmlHeader = kmlHeader;
         this.outputPath = outputPath;
         this.categoriesAmount = categoriesAmount;
         this.foldersAmount = categoriesAmount - 1;
+        this.currentIndent = 0;
+        this.csvRecordToStringInitData = csvRecordToStringInitData;
+        this.csvRecordToString = new CsvRecordToString(csvRecordToStringInitData);
     }
 
     /**
@@ -75,7 +82,7 @@ public class KmlWriter {
     }
 
     private String closeFolder(){
-        return makeIndent(--currentIndent) + "</Folder>";
+        return makeIndent(--currentIndent) + "</Folder>\n";
     }
 
     @NotNull
@@ -132,7 +139,7 @@ public class KmlWriter {
         return folderName.toString();
     }
 
-    private int getNumberOfDifferencesBtwnPaths(String firstPath, String secondPath){
+    private int getNumberOfDifferencesBetweenPaths(String firstPath, String secondPath){
         /**
         * Returns number of different folders in Paths. It can be used for folder creation
          * and closing.
@@ -151,7 +158,83 @@ public class KmlWriter {
         return differencesNum;
     }
 
-    //todo: implement comparing paths and running folder creation/closing operations based on the result
+    private String[] getDifferencesBetweenPaths(String firstPath, String secondPath){
+        /**
+         * Returns String[] which contains folder names from secondPath which don't match firstPath
+         */
+        int nbOfDifferences = getNumberOfDifferencesBetweenPaths(firstPath, secondPath);
+        String[] differencesBetweenPaths = new String[nbOfDifferences];
+
+        int counter = 0;
+        for(int i = 0; i < foldersAmount; i++)
+            if( !getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)) ) {
+                differencesBetweenPaths[counter] = getFolderNameFromPathAt(secondPath, i);
+                counter++;
+            }
+        return differencesBetweenPaths;
+    }
+
+    private String writeAllDataRecords(){
+        /**
+         * Saves all data records to file in a form of CSV file that lacks only a header
+         */
+        //todo: current implementation returns a String. It should write to the file
+        StringBuilder result = new StringBuilder();
+
+        //open first folder
+        String lineSplit[] = lineList.get(1).split(";");
+        for(int i = 0; i < foldersAmount; i++){
+            result.append(makeFolder(lineSplit[i]));
+        }
+
+        //write all records
+        for(int i = 1; i < lineList.size(); i++){ //starting from 1 because first line is a csv header
+            boolean skipLast = (i == lineList.size()-1);
+
+            String currentLine = getPathForLine(
+                    lineList.get(i)
+                    .replaceAll("\n","")
+                    .replaceAll("\t","")
+                    .replaceAll(" ","")
+            );
+            String nextLine = null;
+            if(!skipLast) {
+                nextLine = getPathForLine(recordWithLine(
+                        lineList.get(i + 1))
+                        .replaceAll("\n","")
+                        .replaceAll("\t","")
+                        .replaceAll(" ","")
+                );
+            }
+
+            //write a record
+            csvRecordToString.setLine(lineList.get(i));
+            result.append(csvRecordToString.getRecord());
+
+            //check if needs folder change
+            int NumberOfDifferencesBetweenPaths = skipLast ? 0 : getNumberOfDifferencesBetweenPaths(currentLine, nextLine);
+            if(NumberOfDifferencesBetweenPaths != 0){
+                //close folder
+                for(int j = 0; j < NumberOfDifferencesBetweenPaths; j++){
+                    result.append(closeFolder());
+                }
+                //open folder
+                String[] differences = getDifferencesBetweenPaths(currentLine, nextLine);
+                for(int j = differences.length - 1; j > 0; j--){
+                    result.append(makeFolder(differences[j]));
+                }
+
+            }
+        }
+
+        //close last folder
+        for(int i = 0; i < foldersAmount; i++){
+            result.append(closeFolder());
+        }
+
+
+        return result.toString();
+    }
 
     public void debugTest(){
         /**
@@ -169,7 +252,7 @@ public class KmlWriter {
 
         System.out.print("\nThird element from path: ");
         System.out.print(getFolderNameFromPathAt(line1, 3));
-        System.out.print("\necond element from path: ");
+        System.out.print("\nSecond element from path: ");
         System.out.print(getFolderNameFromPathAt(line1, 2));
         System.out.print("\nFirst element from path: ");
         System.out.print(getFolderNameFromPathAt(line1, 1));
@@ -181,11 +264,13 @@ public class KmlWriter {
         System.out.println("\n\nPath 1: " + line1 );
         System.out.println("Path 2: " + line2);
         System.out.println("Number of different folders: " +
-                getNumberOfDifferencesBtwnPaths(line1, line2));
+                getNumberOfDifferencesBetweenPaths(line1, line2));
         */
 
-        System.out.println(kmlHeader);
-        System.out.println();
+        //System.out.println(kmlHeader);
+        //System.out.println();
+
+        System.out.println(writeAllDataRecords());
 
     }
 }

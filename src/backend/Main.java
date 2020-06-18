@@ -18,11 +18,11 @@ public class Main {
         List<String> lineList = new ArrayList<String>();
         String kmlHeader;
         String outputPath = null;
-        int categoriesAmount = 0;
+        int categoriesAmount = 3;
 
         CsvReader csvReader = new CsvReader("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\short_valid_csv.csv");
         //System.out.print(csvReader.getSortedCsvReadyString());
-        csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
+        String sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
         lineList = csvReader.getLineList();
         //System.out.println(lineList);
 
@@ -33,18 +33,17 @@ public class Main {
 
         //test
         List<String> lastCategories = new ArrayList<String>();
-        lastCategories.add("first");
-        lastCategories.add("second");
-        lastCategories.add("third");
+        LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, 3, true, true);
+        lastCategories = lastCategoryScanner.getLastCatList();
 
-        //IconSet iconSet = new IconSet("example_test_files/testPreset.txt", lastCategories);
-        IconSet iconSet = new IconSet(iconList, lastCategories);
+        IconSet iconSet = new IconSet("example_test_files/testPreset.txt", lastCategories);
+        //IconSet iconSet = new IconSet(iconList, lastCategories);
 
-        CsvRecordToString recordWriter = new CsvRecordToString(iconList, 3,5, lineList.get(1), false, true, iconSet);
-        System.out.println(recordWriter.getRecord());
+        CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(iconList, 3,5, lineList.get(1), false, true, iconSet);
+        //System.out.println(recordWriter.getRecord());
 
-        KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, outputPath);
+        KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, "example_test_files/testKML.kml", csvRecordToStringInitData);
 
-       kmlWriter.debugTest();
+        kmlWriter.debugTest();
     }
 }

@@ -23,6 +23,21 @@ public class CsvRecordToString {
         this.record = getPinData();
     }
 
+    public CsvRecordToString(CsvRecordToStringInitData initData){
+        this.iconSet = initData.iconSet;
+        this.iconList = initData.iconList;
+        this.categoriesAmount = initData.categoriesAmount;
+        this.maxRate = initData.maxRate;
+        this.line = initData.line;
+        this.hasRating = initData.hasRating;
+        this.addLastCategory = initData.addLastCategory;
+        this.record = getPinData();
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
     private String getPinData(){ //todo: implement 0 categories variant, overload and handle it
         /**
          * reads Pin data. it ignores folders and folder indentation
@@ -53,6 +68,8 @@ public class CsvRecordToString {
         String delimiter = ";"; // str.split works with Strings only
 
         String[] lineSplit = line.split(delimiter);
+
+        trimStringArray(lineSplit);
 
         String longitude = lineSplit[categoriesAmount];
         String latitude = lineSplit[categoriesAmount + 1];
@@ -105,17 +122,23 @@ public class CsvRecordToString {
         return placemark;
     }
 
+    private void trimStringArray(String[] lineSplit) {
+        for(int i = 0; i < lineSplit.length; i++){
+            lineSplit[i] = lineSplit[i].trim();
+        }
+    }
+
     private String getIconName(String lastCategory) {
         /**
         * getIconName returns a proper icon name from icon preset
          * it's associated with lastCategory
          */
-        System.out.println(iconSet.toString());
+        //System.out.println(iconSet.toString()); //debug
         return this.iconSet.getIconForCategory(lastCategory);
     }
 
-    public String getRecord(){
-        return record;
+    public String getRecord(){ //todo: refactor later, this method may be redundant
+        return getPinData();
     }
 
     public String getLastCategory(){
