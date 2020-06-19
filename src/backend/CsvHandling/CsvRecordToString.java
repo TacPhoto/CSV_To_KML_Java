@@ -112,7 +112,7 @@ public class CsvRecordToString {
         placemarkBuilder.append("\t\t</LookAt>\n");
         placemarkBuilder.append("\t\t<styleUrl>#"+getIconName(lastCategory)+"</styleUrl>\n"); //todo: implement getIconName
         placemarkBuilder.append("\t\t<Point>\n");
-        placemarkBuilder.append("\t\t\tgx:drawOrder>1</gx:drawOrder>\n" +
+        placemarkBuilder.append("\t\t\t<gx:drawOrder>1</gx:drawOrder>\n" +
                 "\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>\n");
         placemarkBuilder.append("\t\t</Point>\n");
         placemarkBuilder.append("\t</Placemark>\n");

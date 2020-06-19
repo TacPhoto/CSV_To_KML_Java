@@ -4,9 +4,7 @@ import backend.CsvHandling.CsvRecordToString;
 import backend.CsvHandling.CsvRecordToStringInitData;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.List;
 
 public class KmlWriter {
@@ -26,7 +24,7 @@ public class KmlWriter {
         this.outputPath = outputPath;
         this.categoriesAmount = categoriesAmount;
         this.foldersAmount = categoriesAmount - 1;
-        this.currentIndent = 0;
+        this.currentIndent = 1;
         this.csvRecordToStringInitData = csvRecordToStringInitData;
         this.csvRecordToString = new CsvRecordToString(csvRecordToStringInitData);
     }
@@ -119,7 +117,7 @@ public class KmlWriter {
         /**
          * Returns specific folder name from a path basing on its index
          * in hierarchy
-         * Can be used to extract text between X semicolon and X+1 semicolon
+         * Can be used to extract text between Xth semicolon and X+1th semicolon
          */
 
         int counter = 0;
@@ -151,8 +149,8 @@ public class KmlWriter {
         if(firstPath.equals(secondPath))
             return 0;
 
-        for(int i = 0; i < foldersAmount; i++)
-            if( getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)) )
+        for(int i = foldersAmount; i >0; i--)
+            if( !getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)) )
                 differencesNum++;
 
         return differencesNum;
@@ -165,12 +163,18 @@ public class KmlWriter {
         int nbOfDifferences = getNumberOfDifferencesBetweenPaths(firstPath, secondPath);
         String[] differencesBetweenPaths = new String[nbOfDifferences];
 
+        String firstFolder = null;
+        String secondFolder = null;
+
         int counter = 0;
-        for(int i = 0; i < foldersAmount; i++)
-            if( !getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)) ) {
+        for(int i = foldersAmount; i > 0 ; --i){
+            firstFolder = getFolderNameFromPathAt(firstPath, i);
+            secondFolder = getFolderNameFromPathAt(secondPath, i );
+            if( ! firstFolder.equals(secondFolder)) {
                 differencesBetweenPaths[counter] = getFolderNameFromPathAt(secondPath, i);
                 counter++;
             }
+        }
         return differencesBetweenPaths;
     }
 
@@ -205,6 +209,11 @@ public class KmlWriter {
                         .replaceAll("\t","")
                         .replaceAll(" ","")
                 );
+            }else{
+                for(int j = 0; j < foldersAmount - 1; j++){ //folders amount - 1 because there is one semicolon num then folders num ex. "fol1;fol2"
+                    nextLine += ";";
+                }
+               currentIndent++; //prevents indentation level issues caused by comparing last line with empty line composed of spaces and semicolons
             }
 
             //write a record
@@ -215,28 +224,46 @@ public class KmlWriter {
             int NumberOfDifferencesBetweenPaths = skipLast ? 0 : getNumberOfDifferencesBetweenPaths(currentLine, nextLine);
             if(NumberOfDifferencesBetweenPaths != 0){
                 //close folder
-                for(int j = 0; j < NumberOfDifferencesBetweenPaths; j++){
-                    result.append(closeFolder());
-                }
-                //open folder
-                String[] differences = getDifferencesBetweenPaths(currentLine, nextLine);
-                for(int j = differences.length - 1; j > 0; j--){
-                    result.append(makeFolder(differences[j]));
+                if (skipLast){
+                    NumberOfDifferencesBetweenPaths = -1; //prevents closing main kml folder too early
                 }
 
+                    for (int j = 0; j < NumberOfDifferencesBetweenPaths; j++) {
+                        result.append(closeFolder());
+                    }
+
+                //open folder
+                String[] differences = getDifferencesBetweenPaths(currentLine, nextLine);
+                for(int j = differences.length; j > 0; j--){
+                    result.append(makeFolder(differences[j - 1]));
+                }
             }
         }
 
         //close last folder
-        for(int i = 0; i < foldersAmount; i++){
+        for(int i = 0; i < currentIndent - 1; i++){
             result.append(closeFolder());
         }
-
 
         return result.toString();
     }
 
-    public void debugTest(){
+    public String writeKMLFile(){
+        StringBuilder result = new StringBuilder();
+
+        //write header
+        result.append(kmlHeader);
+
+        //write records
+        result.append(writeAllDataRecords());
+
+        //close kml
+        result.append("</Document>\n</kml>\n");
+
+        return result.toString();
+    }
+
+    public void debugTest() throws FileNotFoundException, UnsupportedEncodingException {
         /**
          * Debug method used for testing class during development
          * This method should not be used on production
@@ -270,8 +297,19 @@ public class KmlWriter {
         //System.out.println(kmlHeader);
         //System.out.println();
 
-        System.out.println(writeAllDataRecords());
+        String result = writeKMLFile();
+        System.out.println(result);
 
+        //save test kml file
+        final PrintWriter writer = new PrintWriter
+                (new BufferedWriter(
+                        new OutputStreamWriter
+                                (new FileOutputStream("example_test_files/testGeneratedKML.kml"), "utf-8")
+                ));
+
+        writer.write(result);
+        writer.close();
+        
     }
 }
 

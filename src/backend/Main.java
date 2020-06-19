@@ -21,13 +21,10 @@ public class Main {
         int categoriesAmount = 3;
 
         CsvReader csvReader = new CsvReader("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\short_valid_csv.csv");
-        //System.out.print(csvReader.getSortedCsvReadyString());
         String sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
         lineList = csvReader.getLineList();
-        //System.out.println(lineList);
 
         OriginalKmlData originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
-        //System.out.println(originalKmlData.getIconList());
         kmlHeader = originalKmlData.getIconsHeader();
         List<String> iconList = originalKmlData.getIconList();
 
@@ -40,7 +37,6 @@ public class Main {
         //IconSet iconSet = new IconSet(iconList, lastCategories);
 
         CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(iconList, 3,5, lineList.get(1), false, true, iconSet);
-        //System.out.println(recordWriter.getRecord());
 
         KmlWriter kmlWriter = new KmlWriter(lineList, kmlHeader, categoriesAmount, "example_test_files/testKML.kml", csvRecordToStringInitData);
 
