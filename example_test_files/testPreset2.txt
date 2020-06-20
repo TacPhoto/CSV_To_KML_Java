@@ -210,6 +210,6 @@
 			<styleUrl>#sh_info_circle</styleUrl>
 		</Pair>
 	</StyleMap>
-capital;msn_electronics
-big;m_ylw
-small;msn_dollar
+capital;s_ylw-pushpin
+big;s_ylw-pushpin
+small;s_ylw-pushpin

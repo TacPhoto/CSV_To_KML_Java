@@ -309,7 +309,7 @@ public class KmlWriter {
 
         writer.write(result);
         writer.close();
-        
+
     }
 }
 

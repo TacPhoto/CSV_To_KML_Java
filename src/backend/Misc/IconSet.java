@@ -65,6 +65,10 @@ public class IconSet {
         return kmlHeader;
     }
 
+    public void setKmlHeader(String kmlHeader) {
+        this.kmlHeader = kmlHeader;
+    }
+
     public void setIconForCategoryIndex(int categoryIndex, String icon){
         pairedIcons.get(categoryIndex).setIcon(icon);
     }
@@ -76,8 +80,22 @@ public class IconSet {
                 return pairedIcons.get(i).getIcon();
             }
         }
-        return "s_ylw-pushpin";//todo: remember to handle this case. user should get an error prompt
-                               // currently fallbacks to default
+        return null;
+    }
+
+    public String getIconForIndex(int index)
+    {
+        //do not abuse this method, use getIconForCategory() instead if possible
+       return pairedIcons.get(index).getIcon();
+    }
+
+    public String getFirstIcon(){
+        //do not abuse this method, use getIconForCategory() instead if possible
+        return getIconForIndex(0);
+    }
+
+    public int size(){
+        return pairedIcons.size();
     }
 
     public String getDebugIcon(String inputCategory){

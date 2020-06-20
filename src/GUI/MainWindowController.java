@@ -220,16 +220,62 @@ public class MainWindowController {
         iconList = FXCollections.observableArrayList(originalKmlData.getIconList());
     }
 
-    private void prepareIconEditor(CsvReader csvReader) throws Exception {
-        String sortedCsv = csvReader.getSortedCsvReadyString();
+    private void loadIconSetFromPresetFile(String iconSetPresetPath) throws Exception {
+        /**
+         * loadIconSetFromPresetFile(String iconSetPresetPath) cleans table view, then loads IconSet preset
+         * file into the table and IconSet itself and refreshes the table afterwards
+         */
+        iconSet = new IconSet(iconSetPresetPath, categoriesList);
 
-        ArrayList<String> testIconList = new ArrayList<String>();
-        testIconList.add("Ione");
-        testIconList.add("Itwo");
+        iconCategoryTable.getItems().clear(); //clear table view
+
+        for (int i = 0; i < iconSet.size(); i++){
+            String category = categoriesList.get(i);
+            iconCategoryTable.getItems().add(
+                    (new IconsFX(
+                            category,
+                            iconSet.getIconForCategory(category)
+                    )
+                    )
+            );
+        }
+
+        iconCategoryTable.refresh();
+    }
+
+    private void generateIconSetWithoutPresetFIle() {
+        /**
+         * generateIconSetWithoutPresetFIle() cleans table view, generates basic TableView
+         * using default icon value. It also loads kmlHeader into IconSet It will refresh table afterwards
+         */
+        iconSet = new IconSet(iconList, categoriesList);
+        iconSet.setKmlHeader(kmlHeader); //set's KML header for IconSet
+
+        iconCategoryTable.getItems().clear(); //clear table view
+
+        for (int i = 0; i < iconSet.size(); i++) {
+            String category = categoriesList.get(i);
+            iconCategoryTable.getItems().add(
+                    (new IconsFX(
+                            category,
+                            iconSet.getFirstIcon() //first icon from IconSet is used like a default value
+                    )
+                    )
+            );
+        }
+        iconCategoryTable.refresh();
+    }
+
+    private void prepareIconEditor(CsvReader csvReader) throws Exception {
+        /**
+         * This method loads necessary data and let's user customize category-icon pairs before further processing
+         * it needs csv file chosen by user and either IconSet preset file or a KML file for header
+         */
+        String sortedCsv = csvReader.getSortedCsvReadyString();
 
         LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, 3, true, true);
 
-        ///TEST, should be done elsewhere
+        ///TEST, should be done elsewhere basing on user choice
         originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
         kmlHeader = originalKmlData.getIconsHeader();
         ///
@@ -237,36 +283,26 @@ public class MainWindowController {
         categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
         updateIconsFromKML();
 
+        //set edibility flags for table view columns
         iconCategoryTable.setEditable(true);
         categoryCol.setEditable(false);
 
+        //set cell editors for table view columns
         categoryCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("category"));
-
         iconCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("icon"));
         iconCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(iconList));
 
-        /*
-        iconCategoryTable.getItems().add(new IconsFX("capital", "default"));
-        iconCategoryTable.getItems().add(new IconsFX("big", "default"));
-        iconCategoryTable.getItems().add(new IconsFX("small", "default"));
-        iconCategoryTable.refresh();
-        */
-
+        //test
         System.out.println(categoriesList);
         System.out.println();
-        //iconSet = new IconSet(iconList, categoriesList);
-        iconSet = new IconSet("example_test_files/testPreset.txt", categoriesList);
-/*
-        iconCategoryTable.getItems().add(new IconsFX("big",iconSet.getIconForCategory("big")));
-        iconCategoryTable.getItems().add(new IconsFX("small",iconSet.getIconForCategory("big")));
-        iconCategoryTable.getItems().add(new IconsFX("capital",iconSet.getIconForCategory("big")));
-*/
-        iconCategoryTable.refresh();
 
+        //load or generate IconSet //todo: this should be based on user choise
+        generateIconSetWithoutPresetFIle();
+        //loadIconSetFromPresetFile("example_test_files/testPreset.txt");
 
+        //test
         System.out.println(iconSet.getDebugIcon("big"));
         System.out.println("test end");
-
         iconSet.saveIconSetPresetFile("example_test_files/testPreset2.txt");
     }
 }
