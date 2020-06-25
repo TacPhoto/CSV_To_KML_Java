@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.junit.platform.commons.util.StringUtils;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,9 @@ public class MainWindowController {
     private String outputKMLPath;
     private String outputPresetPath;
     private String kmlHeader;
+    private String iconPresetType = "";
+
+    private boolean wasDataLoaded = false;
 
     private OriginalKmlData originalKmlData;
 
@@ -113,6 +117,16 @@ public class MainWindowController {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
+    public File selectFile(String extension) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
+
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        fileChooser.setSelectedExtensionFilter(extensionFilter);
+
+        return fileChooser.showOpenDialog(primaryStage);
+    }
+
     public void selectOutputPresetFile() {
         try {
             outputKMLPath = selectFile().getPath();
@@ -122,9 +136,9 @@ public class MainWindowController {
         }
     }
 
-    public void selectOutPutKMLFile() {
+    public void selectOutputKMLFile() {
         try {
-            outputKMLPath = selectFile().getPath();
+            outputKMLPath = selectFile("kml").getPath();
             outputPathTextField.setText(outputKMLPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
@@ -142,11 +156,49 @@ public class MainWindowController {
 
     public void selectCsvFile() {
         try {
-            csvPath = selectFile().getPath();
+            csvPath = selectFile("csv").getPath();
             csvPathTextField.setText(csvPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
         }
+    }
+
+    public void refreshCsvFilePath(){
+        csvPath = csvPathTextField.getText();
+    }
+
+    public boolean isFilePathValid(String path){
+        File file = new File(path);
+
+        if(file.canRead() && file.exists()){
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isValidCSV(String path){
+        if(!isFilePathValid(path)){
+            return false;
+        }
+
+        if(!path.toLowerCase().endsWith(".csv")){
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isValidKML(String path){
+        if(!isFilePathValid(path)){
+            return false;
+        }
+
+        if(!path.toLowerCase().endsWith(".kml")){
+            return false;
+        }
+
+        return true;
     }
 
     public void setPaths(String csvPath
@@ -187,8 +239,14 @@ public class MainWindowController {
         });
     }
 
+    public void updatePresetTypeSelectorValue(){
+        iconPresetType = (String) presetTypeSelectorCombo.getValue();
+    }
+
     public void loadDataFromCsv() throws Exception {
         csvPath = "example_test_files/short_valid_csv.csv";
+
+        System.out.println("Number of categories given by user or from file: " + numberOfCategories); //DEBUG
 
         if (csvPath != null) {
             CsvReader csvReader = new CsvReader(csvPath);
@@ -226,6 +284,7 @@ public class MainWindowController {
          * file into the table and IconSet itself and refreshes the table afterwards
          */
         iconSet = new IconSet(iconSetPresetPath, categoriesList);
+        kmlHeader = iconSet.kmlHeader;
 
         iconCategoryTable.getItems().clear(); //clear table view
 
@@ -273,7 +332,8 @@ public class MainWindowController {
          */
         String sortedCsv = csvReader.getSortedCsvReadyString();
 
-        LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, 3, true, true);
+        numberOfCategories = 3; //todo: REMOVE THIS LINE LATER. IT IS HERE JUST SO TESTING IS QUICKER
+        LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
 
         ///TEST, should be done elsewhere basing on user choice
         originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
@@ -292,17 +352,22 @@ public class MainWindowController {
         iconCol.setCellValueFactory(new PropertyValueFactory<IconsFX, String>("icon"));
         iconCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(iconList));
 
-        //test
-        System.out.println(categoriesList);
-        System.out.println();
+        refreshCsvFilePath();
+        if(!isValidCSV(csvPath)){
+            return; //todo: put some error here
+        }
 
-        //load or generate IconSet //todo: this should be based on user choise
-        generateIconSetWithoutPresetFIle();
-        //loadIconSetFromPresetFile("example_test_files/testPreset.txt");
+        //load or generate IconSet
+        if(iconPresetType.equals("From preset file")){
+            loadIconSetFromPresetFile("example_test_files/testPreset.txt");
+        }else {
+            generateIconSetWithoutPresetFIle(); //default state, does not need user choice
+        }
 
-        //test
-        System.out.println(iconSet.getDebugIcon("big"));
-        System.out.println("test end");
+        //test;
         iconSet.saveIconSetPresetFile("example_test_files/testPreset2.txt");
+
+        wasDataLoaded = true;
     }
 }
+//todo: handle all cases when user wants to change icon preset type or csv etc

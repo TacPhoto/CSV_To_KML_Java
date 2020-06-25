@@ -69,7 +69,7 @@
                   <Insets bottom="1.0" left="120.0" right="85.0" top="65.0" />
                </StackPane.margin>
             </TextField>
-            <ComboBox fx:id="presetTypeSelectorCombo" layoutX="144.0" layoutY="34.0" prefHeight="25.0" prefWidth="150.0" StackPane.alignment="TOP_LEFT">
+            <ComboBox fx:id="presetTypeSelectorCombo" layoutX="144.0" layoutY="34.0" prefHeight="25.0" prefWidth="150.0" StackPane.alignment="TOP_LEFT" onAction="#updatePresetTypeSelectorValue">
                <StackPane.margin>
                   <Insets left="120.0" right="10.0" top="37.5" />
                </StackPane.margin></ComboBox>
@@ -113,7 +113,7 @@
                   <Insets left="125.0" right="85.0" top="155.0" />
                </StackPane.margin>
             </TextField>
-            <Button fx:id="outputPathSelectorButton" mnemonicParsing="false" onAction="#selectOutPutKMLFile" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
+            <Button fx:id="outputPathSelectorButton" mnemonicParsing="false" onAction="#selectOutputKMLFile" prefHeight="25.0" prefWidth="71.0" text="Select" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" top="152.5" />
                </StackPane.margin>

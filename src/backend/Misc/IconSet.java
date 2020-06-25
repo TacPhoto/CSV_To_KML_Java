@@ -50,7 +50,6 @@ public class IconSet {
         this.kmlHeader = originalKmlData.getIconsHeader();
         this.iconList = originalKmlData.getIconList();
 
-
         nbOfAvailableCategories = availableCategories.size();
         for(int i = 0; i < nbOfAvailableCategories; i++) {
             this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
