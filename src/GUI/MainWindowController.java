@@ -2,8 +2,8 @@ package GUI;
 
 import backend.CsvHandling.CsvReader;
 import backend.CsvHandling.LastCategoryScanner;
-import backend.Misc.IconSet;
 import backend.KmlHandling.OriginalKmlData;
+import backend.Misc.IconSet;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,10 +18,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.junit.platform.commons.util.StringUtils;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainWindowController {
     @FXML
@@ -96,6 +99,8 @@ public class MainWindowController {
 
     private IconSet iconSet;
 
+    private final static Logger LOGGER = Logger.getLogger(CsvReader.class.getName());
+
     public static void addControls(AnchorPane pane) {
     }
 
@@ -103,6 +108,7 @@ public class MainWindowController {
     }
 
     public void setStage(Stage primaryStage) {
+        LOGGER.setLevel(Level.INFO);
         this.primaryStage = primaryStage;
 
         final ObservableList<String> iconSetPresetTypes = FXCollections.observableArrayList(
@@ -110,6 +116,21 @@ public class MainWindowController {
                 "From preset file"
         );
         presetTypeSelectorCombo.setItems(iconSetPresetTypes);
+    }
+
+    public void setMessageLabelText(String errorText){
+        LOGGER.info(errorText);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        if(errorText == null){
+            errorText = dtf.format(now) + "  Unknown Error";
+        }else{
+            errorText = dtf.format(now) + "  " + errorText;
+        }
+
+        messageContentLabel.setText(errorText);
     }
 
     public File selectFile() {
@@ -244,7 +265,26 @@ public class MainWindowController {
     }
 
     public void loadDataFromCsv() throws Exception {
-        csvPath = "example_test_files/short_valid_csv.csv";
+        if(presetTypeSelectorCombo.getValue() == null){
+            setMessageLabelText("No preset type was selected");
+            return;
+        }
+        String presetType = presetTypeSelectorCombo.getValue().toString();
+
+        if(csvPath == null){
+            setMessageLabelText("No CSV file was selected");
+            return;
+        }
+
+        if(!isValidCSV(csvPath)){
+            setMessageLabelText("Selected CSV file does not have .csv nor .CSV extension, file may be invalid.");
+            return;
+        }
+
+        if(presetType.equals("From preset file") & (presetPath == null || presetType.equals(""))){
+            setMessageLabelText("No Preset file was selected");
+            return;
+        }
 
         System.out.println("Number of categories given by user or from file: " + numberOfCategories); //DEBUG
 
@@ -253,8 +293,12 @@ public class MainWindowController {
             csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
             lineList = csvReader.getLineList();
 
-            if (false) {
-                //todo: check preset type, run either scan on kml or preset file
+            if (presetType.equals("Created manually")) {
+
+                if(!isValidKML(presetPath)){
+                    setMessageLabelText("Preset should be .kml or .KML file if you want to set it manually");
+                    return;
+                }
 
                 //parse kml as preset
                 originalKmlData = new OriginalKmlData(presetPath);
@@ -262,19 +306,19 @@ public class MainWindowController {
 
                 //get icon list
                 List<String> iconList = originalKmlData.getIconList();
-
-                prepareIconEditor(csvReader);
+            }
+            else if(presetType.equals("From preset file"))
+            {
+                //parse preset file as preset
+                loadIconSetFromPresetFile(presetPath);
             }
 
-            //test
             prepareIconEditor(csvReader);
-        } else
-            System.out.println("NOT ENOUGH DATA TO PARSE CSV");
-
+        }
     }
 
     private void updateIconsFromKML(){
-        //does no need additional List cleanup
+        //does not need additional List cleanup
         iconList = FXCollections.observableArrayList(originalKmlData.getIconList());
     }
 
@@ -283,6 +327,9 @@ public class MainWindowController {
          * loadIconSetFromPresetFile(String iconSetPresetPath) cleans table view, then loads IconSet preset
          * file into the table and IconSet itself and refreshes the table afterwards
          */
+
+        //todo: set categoriesList
+
         iconSet = new IconSet(iconSetPresetPath, categoriesList);
         kmlHeader = iconSet.kmlHeader;
 
@@ -326,11 +373,14 @@ public class MainWindowController {
     }
 
     private void prepareIconEditor(CsvReader csvReader) throws Exception {
+        //TODO: MAKE IT WORK WITH PRESET FILES
+        // CURRENT PIPELINE WORKS WITH KML ONLY
         /**
          * This method loads necessary data and let's user customize category-icon pairs before further processing
          * it needs csv file chosen by user and either IconSet preset file or a KML file for header
          */
         String sortedCsv = csvReader.getSortedCsvReadyString();
+
 
         numberOfCategories = 3; //todo: REMOVE THIS LINE LATER. IT IS HERE JUST SO TESTING IS QUICKER
         LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
