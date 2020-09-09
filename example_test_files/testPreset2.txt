@@ -212,4 +212,4 @@
 	</StyleMap>
 capital;s_ylw-pushpin
 big;s_ylw-pushpin
-small;s_ylw-pushpin
+small;sh_electronics

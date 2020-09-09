@@ -82,12 +82,15 @@ public class MainWindowController {
 
     public Stage primaryStage;
 
+    LastCategoryScanner lastCategoryScanner;
+
     private String csvPath;
     private String presetPath;
     private String outputKMLPath;
     private String outputPresetPath;
     private String kmlHeader;
     private String iconPresetType = "";
+    private String sortedCsv;
 
     private boolean wasDataLoaded = false;
 
@@ -277,7 +280,7 @@ public class MainWindowController {
             loadPresetFileText.setText("Load Icon Preset");
     }
 
-    public void loadDataFromCsv() throws Exception {
+    public void loadDataFromCsvAndKML() throws Exception {
         if(presetTypeSelectorCombo.getValue() == null){
             setMessageLabelText("No preset type was selected");
             return;
@@ -303,8 +306,13 @@ public class MainWindowController {
 
         if (csvPath != null) {
             CsvReader csvReader = new CsvReader(csvPath);
-            csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
-            lineList = csvReader.getLineList();
+            sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
+            lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
+            categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
+
+            //parse kml header
+            originalKmlData = new OriginalKmlData(presetPath);
+            kmlHeader = originalKmlData.getIconsHeader();
 
             if (presetType.equals("Created manually")) {
 
@@ -313,17 +321,13 @@ public class MainWindowController {
                     return;
                 }
 
-                //parse kml as preset
-                originalKmlData = new OriginalKmlData(presetPath);
-                kmlHeader = originalKmlData.getIconsHeader();
-
                 //get icon list
                 List<String> iconList = originalKmlData.getIconList();
             }
             else if(presetType.equals("From preset file"))
             {
                 //parse preset file as preset
-                loadIconSetFromPresetFile(presetPath);
+                loadIconSetFromPresetFileToTheUI();
             }
 
             prepareIconEditor(csvReader);
@@ -335,15 +339,17 @@ public class MainWindowController {
         iconList = FXCollections.observableArrayList(originalKmlData.getIconList());
     }
 
-    private void loadIconSetFromPresetFile(String iconSetPresetPath) throws Exception {
+    private void loadIconSetFromPresetFileToTheUI() throws Exception {
         /**
          * loadIconSetFromPresetFile(String iconSetPresetPath) cleans table view, then loads IconSet preset
          * file into the table and IconSet itself and refreshes the table afterwards
          */
+        if(((String)presetTypeSelectorCombo.getValue()).equals("Created manually")) { //this cast let's us avoid nullptr on .toString() so I placed it here just in case
+            iconSet = new IconSet(presetPath, categoriesList);
+        }else{
+            iconSet = new IconSet(presetPath, numberOfCategories);
+        }
 
-        //todo: set categoriesList
-
-        iconSet = new IconSet(iconSetPresetPath, categoriesList);
         kmlHeader = iconSet.kmlHeader;
 
         iconCategoryTable.getItems().clear(); //clear table view
@@ -392,18 +398,7 @@ public class MainWindowController {
          * This method loads necessary data and let's user customize category-icon pairs before further processing
          * it needs csv file chosen by user and either IconSet preset file or a KML file for header
          */
-        String sortedCsv = csvReader.getSortedCsvReadyString();
 
-
-        numberOfCategories = 3; //todo: REMOVE THIS LINE LATER. IT IS HERE JUST SO TESTING IS QUICKER
-        LastCategoryScanner lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
-
-        ///TEST, should be done elsewhere basing on user choice
-        originalKmlData = new OriginalKmlData("Z:\\GitHubLearning\\CSV_To_KML_Java\\example_test_files\\ShortExample.kml");
-        kmlHeader = originalKmlData.getIconsHeader();
-        ///
-
-        categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
         updateIconsFromKML();
 
         //set edibility flags for table view columns
@@ -422,13 +417,13 @@ public class MainWindowController {
 
         //load or generate IconSet
         if(iconPresetType.equals("From preset file")){
-            loadIconSetFromPresetFile("example_test_files/testPreset.txt");
+            loadIconSetFromPresetFileToTheUI();
         }else {
             generateIconSetWithoutPresetFIle(); //default state, does not need user choice
         }
 
         //test;
-        iconSet.saveIconSetPresetFile("example_test_files/testPreset2.txt");
+        //iconSet.saveIconSetPresetFile("example_test_files/testPreset2.txt");
 
         wasDataLoaded = true;
     }

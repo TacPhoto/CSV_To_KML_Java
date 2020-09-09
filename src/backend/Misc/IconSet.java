@@ -55,6 +55,26 @@ public class IconSet {
             this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
         }
 
+
+
+        generateIconSetFromData();
+
+        readIconSetPresetFile(iconSetPresetFilePath);
+    }
+
+    public IconSet(String iconSetPresetFilePath,  int numberOfCategories) throws Exception {
+        LOGGER.setLevel(Level.INFO);
+
+        OriginalKmlData originalKmlData = new OriginalKmlData(iconSetPresetFilePath);
+        originalKmlData.removeIconSetPresetData();
+        this.kmlHeader = originalKmlData.getIconsHeader();
+        this.iconList = originalKmlData.getIconList();
+
+        nbOfAvailableCategories = numberOfCategories; //not a redundant variable
+        for(int i = 0; i < nbOfAvailableCategories; i++) {
+            this.pairedIcons.add(i, new SingleIconPair("",""));
+        }
+
         generateIconSetFromData();
 
         readIconSetPresetFile(iconSetPresetFilePath);
@@ -224,7 +244,7 @@ public class IconSet {
 
         deleteHeaderFromLineList(lineList); //deletes KML header from the line list. It is important step, without it validation below will always fail
 
-        if(!(nbOfAvailableCategories == lineList.size())) {
+        if(nbOfAvailableCategories != lineList.size()) {
             LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. Number of available categories does not match length of categories in the file");
             return false;
         }
