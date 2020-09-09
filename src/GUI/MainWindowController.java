@@ -70,6 +70,8 @@ public class MainWindowController {
     @FXML
     public Text messageMessageText;
     @FXML
+    public Text loadPresetFileText;
+    @FXML
     public Label messageContentLabel;
     @FXML
     public TableView<IconsFX> iconCategoryTable;
@@ -116,6 +118,9 @@ public class MainWindowController {
                 "From preset file"
         );
         presetTypeSelectorCombo.setItems(iconSetPresetTypes);
+
+        presetSelectorButton.setDisable(true); //enabled by updatePresetTypeSelectorValue()
+        loadDataButton.setDisable(true); //enabled by selectPresetFile()
     }
 
     public void setMessageLabelText(String errorText){
@@ -173,6 +178,8 @@ public class MainWindowController {
         } catch (Exception e) {
             //case when no file was selected. Ignore
         }
+
+        loadDataButton.setDisable(false);
     }
 
     public void selectCsvFile() {
@@ -262,6 +269,12 @@ public class MainWindowController {
 
     public void updatePresetTypeSelectorValue(){
         iconPresetType = (String) presetTypeSelectorCombo.getValue();
+        presetSelectorButton.setDisable(false);
+
+        if (((String)presetTypeSelectorCombo.getValue()).equals("Created manually")) //it's funny but this cast let's us avoid nullptr on .toString() so I placed it here just in case
+            loadPresetFileText.setText("Load KML file");
+        else
+            loadPresetFileText.setText("Load Icon Preset");
     }
 
     public void loadDataFromCsv() throws Exception {

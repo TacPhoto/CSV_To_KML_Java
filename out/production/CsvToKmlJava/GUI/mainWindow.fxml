@@ -45,7 +45,7 @@
                <StackPane.margin>
                   <Insets left="10.0" top="16.0" />
                </StackPane.margin></Text>
-            <Text layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Load Icon Preset" StackPane.alignment="TOP_LEFT">
+            <Text fx:id="loadPresetFileText" layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Load Icon Preset" StackPane.alignment="TOP_LEFT">
                <StackPane.margin>
                   <Insets left="10.0" top="71.0" />
                </StackPane.margin></Text>
@@ -61,7 +61,7 @@
                   <Insets left="120.0" right="85.0" top="10.0" />
                </StackPane.margin>
             </TextField>
-            <TextField fx:id="iconPresetPathTextField" editable="false" layoutX="144.0" layoutY="59.0" maxHeight="22.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
+            <TextField editable="false" layoutX="144.0" layoutY="59.0" maxHeight="22.0" prefHeight="22.0" prefWidth="746.0" StackPane.alignment="TOP_CENTER">
                <font>
                    <Font size="9.0" />
                </font>
@@ -163,7 +163,7 @@
                   <Insets left="10.0" />
                </StackPane.margin>
             </Text>
-            <Label fx:id="messageContentLabel" prefHeight="23.0" prefWidth="902.0" text="" textFill="#a41818" StackPane.alignment="CENTER">
+            <Label fx:id="messageContentLabel" prefHeight="23.0" prefWidth="902.0" textFill="#a41818" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets left="70.0" right="10.0" />
                </StackPane.margin>
