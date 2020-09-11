@@ -92,6 +92,10 @@ public class IconSet {
         pairedIcons.get(categoryIndex).setIcon(icon);
     }
 
+    public void setCategoryForIndex(int categoryIndex, String category){
+        pairedIcons.get(categoryIndex).setIcon(category);
+    }
+
     public String getIconForCategory(String inputCategory){
         for(int i = 0; i < pairedIcons.size(); i++){
             String catFromList = pairedIcons.get(i).getCategory();

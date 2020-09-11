@@ -348,14 +348,17 @@ public class MainWindowController {
     }
 
     public void savePresetFile() throws IOException {
-        //TODO: REFRESH/READ DATA FROM TABLE
+        refreshIconSetPairedIcons();
+
+        if(!outputPresetPath.toLowerCase().endsWith(".kmlpreset")){
+            outputPresetPath = outputPresetPath + ".kmlpreset";
+        }
+
         iconSet.saveIconSetPresetFile(outputPresetPath);
 
         messageContentLabel.setTextFill(Color.GREEN);
-
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-
         messageContentLabel.setText(dtf.format(now) + " Preset successfully saved as " + outputPresetPath);
     }
 
@@ -519,10 +522,17 @@ public class MainWindowController {
             generateIconSetWithoutPresetFIle(); //default state, does not need user choice
         }
 
-        //test;
-        //iconSet.saveIconSetPresetFile("example_test_files/testPreset2.txt");
 
         wasDataLoaded = true;
+    }
+
+    private void refreshIconSetPairedIcons(){
+        for(int i = 0; i < iconSet.nbOfAvailableCategories; i++){
+            iconSet.setCategoryForIndex(i, categoryCol.getCellObservableValue(i).getValue().toString());
+            iconSet.setIconForCategoryIndex(i, iconCol.getCellObservableValue(i).getValue().toString());
+        }
+
+
     }
 }
 //todo: handle all cases when user wants to change icon preset type or csv etc
