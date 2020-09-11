@@ -185,12 +185,12 @@ public class MainWindowController {
         messageContentLabel.setText(errorText);
     }
 
-    public File selectFile() {
+    private File selectFile() {
         FileChooser fileChooser = new FileChooser();
         return fileChooser.showOpenDialog(primaryStage);
     }
 
-    public File selectFile(String extension) {
+    private File selectFile(String extension) {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
 
@@ -238,11 +238,11 @@ public class MainWindowController {
         }
     }
 
-    public void refreshCsvFilePath(){
+    private void refreshCsvFilePath(){
         csvPath = csvPathTextField.getText();
     }
 
-    public boolean isFilePathValid(String path){
+    private boolean isFilePathValid(String path){
         File file = new File(path);
 
         if(file.canRead() && file.exists()){
@@ -252,7 +252,7 @@ public class MainWindowController {
         return false;
     }
 
-    public boolean isValidCSV(String path){
+    private boolean isValidCSV(String path){
         if(!isFilePathValid(path)){
             return false;
         }
@@ -264,7 +264,7 @@ public class MainWindowController {
         return true;
     }
 
-    public boolean isValidKML(String path){
+    private boolean isValidKML(String path){
         if(!isFilePathValid(path)){
             return false;
         }
