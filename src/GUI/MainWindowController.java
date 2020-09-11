@@ -367,7 +367,7 @@ public class MainWindowController {
     }
 
     public void setNumberOfCategories(Integer numberOfCategories) {
-        numberOfCategories = numberOfCategories;
+        this.numberOfCategories = numberOfCategories;
     }
 
     public void updatePresetTypeSelectorValue(){
