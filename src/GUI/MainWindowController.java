@@ -122,8 +122,52 @@ public class MainWindowController {
         );
         presetTypeSelectorCombo.setItems(iconSetPresetTypes);
 
-        presetSelectorButton.setDisable(true); //enabled by updatePresetTypeSelectorValue()
+        presetSelectorButton.setDisable(true); //enabled by updatePresetTypeSelectorValue() and by listener
         loadDataButton.setDisable(true); //enabled by selectPresetFile()
+
+        iconPresetPathTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try{
+                    if(StringUtils.isNotBlank(newValue)){
+                        presetPath = newValue;
+                        loadDataButton.setDisable(false);
+                    }else{
+                        loadDataButton.setDisable(true);
+                    }
+                }catch(Exception e){
+                    presetPath = oldValue;
+                }
+            }
+        });
+
+        csvPathTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try{
+                    if(StringUtils.isNotBlank(newValue)){
+                        csvPath = newValue;
+                    }
+                }catch(Exception e){
+                    csvPath = oldValue;
+                }
+            }
+        });
+
+        numCategoriesTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable
+                    , String oldValue
+                    , String newValue) {
+                try {
+                    if (StringUtils.isNotBlank(newValue))
+                        numberOfCategories = Integer.parseInt(newValue);
+                } catch (Exception e) {
+                    //that's case when user tries to type nonInteger input
+                    //todo: secure
+                }
+            }
+        });
     }
 
     public void setMessageLabelText(String errorText){
@@ -245,29 +289,13 @@ public class MainWindowController {
 
     }
 
+
     public Integer getNumberOfCategories() {
         return numberOfCategories;
     }
 
     public void setNumberOfCategories(Integer numberOfCategories) {
         numberOfCategories = numberOfCategories;
-    }
-
-    public void setListenerForNumOfCategories() {
-        numCategoriesTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable
-                    , String oldValue
-                    , String newValue) {
-                try {
-                    if (StringUtils.isNotBlank(newValue))
-                        numberOfCategories = Integer.parseInt(newValue);
-                } catch (Exception e) {
-                    //that's case when user tries to type nonInteger input
-                    //todo: secure
-                }
-            }
-        });
     }
 
     public void updatePresetTypeSelectorValue(){

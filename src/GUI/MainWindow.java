@@ -28,7 +28,6 @@ public class MainWindow extends Application {
         primaryStage.setOnCloseRequest((e) -> {MainWindowController.closeProgram();});
 
         controller.setPaths(csvPath, presetPath, outputKMLPath, outputPresetPath);
-        controller.setListenerForNumOfCategories();
 
         primaryStage.show();
 
