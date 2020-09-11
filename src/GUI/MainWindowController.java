@@ -13,12 +13,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -124,6 +126,8 @@ public class MainWindowController {
 
         presetSelectorButton.setDisable(true); //enabled by updatePresetTypeSelectorValue() and by listener
         loadDataButton.setDisable(true); //enabled by selectPresetFile()
+        savePresetButton.setDisable(true); //enabled by selectOutputPresetFile() and a listener
+
 
         iconPresetPathTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -168,10 +172,35 @@ public class MainWindowController {
                 }
             }
         });
+
+        presetToSavePathTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try{
+                    if(StringUtils.isNotBlank(newValue)){
+                        outputPresetPath = newValue;
+
+                        if(iconCategoryTable != null) {
+                            if(iconCategoryTable.getItems().get(0).getIcon() != null)
+                            {
+                                savePresetButton.setDisable(false);
+                            }
+                        }
+                    }else{
+                        savePresetButton.setDisable(true);
+                    }
+                }catch(Exception e){
+                    outputPresetPath = oldValue;
+                }
+            }
+        });
+
     }
 
     public void setMessageLabelText(String errorText){
         LOGGER.info(errorText);
+
+        messageContentLabel.setTextFill(Color.RED);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
@@ -185,12 +214,12 @@ public class MainWindowController {
         messageContentLabel.setText(errorText);
     }
 
-    private File selectFile() {
+    private File selectOpenFile() {
         FileChooser fileChooser = new FileChooser();
         return fileChooser.showOpenDialog(primaryStage);
     }
 
-    private File selectFile(String extension) {
+    private File selectOpenFile(String extension) {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
 
@@ -200,10 +229,39 @@ public class MainWindowController {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
+    private File selectSaveFile() {
+        FileChooser fileChooser = new FileChooser();
+        return fileChooser.showSaveDialog(primaryStage);
+    }
+
+    private File selectSaveFile(String extension) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
+
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        fileChooser.setSelectedExtensionFilter(extensionFilter);
+
+        return fileChooser.showSaveDialog(primaryStage);
+    }
+
     public void selectOutputPresetFile() {
         try {
-            outputKMLPath = selectFile().getPath();
+            outputPresetPath = selectSaveFile("kmlpreset").getPath();
+
+            if(!outputPresetPath.toLowerCase().endsWith(".kmlpreset")){
+                outputPresetPath = outputPresetPath + ".kmlpreset";
+            }
+
             presetToSavePathTextField.setText(outputPresetPath);
+
+            if(iconCategoryTable != null) {
+                if(iconCategoryTable.getItems().get(0).getIcon() != null)
+                {
+                    savePresetButton.setDisable(false);
+                }else{
+                    savePresetButton.setDisable(true);
+                }
+            }
         } catch (Exception e) {
             //case when no file was selected. Ignore
         }
@@ -211,7 +269,7 @@ public class MainWindowController {
 
     public void selectOutputKMLFile() {
         try {
-            outputKMLPath = selectFile("kml").getPath();
+            outputKMLPath = selectOpenFile("kml").getPath();
             outputPathTextField.setText(outputKMLPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
@@ -220,7 +278,7 @@ public class MainWindowController {
 
     public void selectPresetFile() {
         try {
-            presetPath = selectFile().getPath();
+            presetPath = selectOpenFile().getPath();
             iconPresetPathTextField.setText(presetPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
@@ -231,7 +289,7 @@ public class MainWindowController {
 
     public void selectCsvFile() {
         try {
-            csvPath = selectFile("csv").getPath();
+            csvPath = selectOpenFile("csv").getPath();
             csvPathTextField.setText(csvPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
@@ -289,6 +347,17 @@ public class MainWindowController {
 
     }
 
+    public void savePresetFile() throws IOException {
+        //TODO: REFRESH/READ DATA FROM TABLE
+        iconSet.saveIconSetPresetFile(outputPresetPath);
+
+        messageContentLabel.setTextFill(Color.GREEN);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        messageContentLabel.setText(dtf.format(now) + " Preset successfully saved as " + outputPresetPath);
+    }
 
     public Integer getNumberOfCategories() {
         return numberOfCategories;
