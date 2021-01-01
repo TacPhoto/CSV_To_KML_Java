@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,7 +129,7 @@ public class MainWindowController {
         presetSelectorButton.setDisable(true); //enabled by updatePresetTypeSelectorValue() and by listener
         loadDataButton.setDisable(true); //enabled by selectPresetFile()
         savePresetButton.setDisable(true); //enabled by selectOutputPresetFile() and a listener
-
+        processSaveMapButton.setDisable(true); //enabled by outputPathTextField listener and selectOutputKMLFile()
 
         iconPresetPathTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -158,17 +160,28 @@ public class MainWindowController {
             }
         });
 
+        UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+            String newText = change.getControlNewText();
+            if(newText.matches("^[-+]?\\d+$")){
+                return change;
+            }
+            return null;
+        };
+
+        numCategoriesTextField.setTextFormatter(
+                new TextFormatter<Integer>(new IntegerStringConverter(), 0, integerFilter));
+
         numCategoriesTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable
                     , String oldValue
                     , String newValue) {
                 try {
-                    if (StringUtils.isNotBlank(newValue))
+                    if (StringUtils.isNotBlank(newValue)) {
                         numberOfCategories = Integer.parseInt(newValue);
+                    }
                 } catch (Exception e) {
-                    //that's case when user tries to type nonInteger input
-                    //todo: secure
+                    //already secured by textFormatter
                 }
             }
         });
@@ -191,6 +204,27 @@ public class MainWindowController {
                     }
                 }catch(Exception e){
                     outputPresetPath = oldValue;
+                }
+            }
+        });
+
+        outputPathTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try{
+                    if(StringUtils.isNotBlank(newValue)){
+                        outputKMLPath = newValue;
+
+                        if(iconCategoryTable != null) {
+                            if (iconCategoryTable.getItems().get(0).getIcon() != null) {
+                                processSaveMapButton.setDisable(false);
+                            }
+                        }else{
+                            processSaveMapButton.setDisable(true);
+                        }
+                    }
+                }catch (Exception e){
+                    outputKMLPath = oldValue;
                 }
             }
         });
@@ -269,8 +303,17 @@ public class MainWindowController {
 
     public void selectOutputKMLFile() {
         try {
-            outputKMLPath = selectOpenFile("kml").getPath();
+            outputKMLPath = selectSaveFile("kml").getPath();
             outputPathTextField.setText(outputKMLPath);
+
+            if(iconCategoryTable != null) {
+                if (iconCategoryTable.getItems().get(0).getIcon() != null) {
+                    processSaveMapButton.setDisable(false);
+                }
+            }else{
+                processSaveMapButton.setDisable(true);
+            }
+
         } catch (Exception e) {
             //case when no file was selected. Ignore
         }
@@ -415,9 +458,8 @@ public class MainWindowController {
             kmlHeader = originalKmlData.getIconsHeader();
 
             if (presetType.equals("Created manually")) {
-
                 if(!isValidKML(presetPath)){
-                    setMessageLabelText("Preset should be .kml or .KML file if you want to set it manually");
+                    setMessageLabelText("KML file should have .kml or .KML extension if you want to set it manually");
                     return;
                 }
 
@@ -444,6 +486,8 @@ public class MainWindowController {
          * loadIconSetFromPresetFile(String iconSetPresetPath) cleans table view, then loads IconSet preset
          * file into the table and IconSet itself and refreshes the table afterwards
          */
+        iconCategoryTable.getItems().clear(); //clear table view
+
         if(((String)presetTypeSelectorCombo.getValue()).equals("Created manually")) { //this cast let's us avoid nullptr on .toString() so I placed it here just in case
             iconSet = new IconSet(presetPath, categoriesList);
         }else{
@@ -452,7 +496,6 @@ public class MainWindowController {
 
         kmlHeader = iconSet.kmlHeader;
 
-        iconCategoryTable.getItems().clear(); //clear table view
 
         for (int i = 0; i < iconSet.size(); i++){
             String category = categoriesList.get(i);
@@ -464,6 +507,8 @@ public class MainWindowController {
                     )
             );
         }
+
+
 
         iconCategoryTable.refresh();
     }
@@ -492,8 +537,6 @@ public class MainWindowController {
     }
 
     private void prepareIconEditor(CsvReader csvReader) throws Exception {
-        //TODO: MAKE IT WORK WITH PRESET FILES
-        // CURRENT PIPELINE WORKS WITH KML ONLY
         /**
          * This method loads necessary data and let's user customize category-icon pairs before further processing
          * it needs csv file chosen by user and either IconSet preset file or a KML file for header
@@ -512,7 +555,8 @@ public class MainWindowController {
 
         refreshCsvFilePath();
         if(!isValidCSV(csvPath)){
-            return; //todo: put some error here
+            setMessageLabelText("CSV file is invalid");
+            return;
         }
 
         //load or generate IconSet
@@ -535,4 +579,3 @@ public class MainWindowController {
 
     }
 }
-//todo: handle all cases when user wants to change icon preset type or csv etc

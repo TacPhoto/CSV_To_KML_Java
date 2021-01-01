@@ -5,6 +5,7 @@ import backend.KmlHandling.OriginalKmlData;
 import javafx.collections.FXCollections;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,8 +56,6 @@ public class IconSet {
             this.pairedIcons.add(i, new SingleIconPair(availableCategories.get(i),""));
         }
 
-
-
         generateIconSetFromData();
 
         readIconSetPresetFile(iconSetPresetFilePath);
@@ -64,20 +63,43 @@ public class IconSet {
 
     public IconSet(String iconSetPresetFilePath,  int numberOfCategories) throws Exception {
         LOGGER.setLevel(Level.INFO);
+        Path filePath = Paths.get(iconSetPresetFilePath);
+        ArrayList<String> presetLines = new ArrayList<String>();
 
-        OriginalKmlData originalKmlData = new OriginalKmlData(iconSetPresetFilePath);
-        originalKmlData.removeIconSetPresetData();
-        this.kmlHeader = originalKmlData.getIconsHeader();
-        this.iconList = originalKmlData.getIconList();
+        if(!Files.exists(filePath)) {
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File does not exist");
 
-        nbOfAvailableCategories = numberOfCategories; //not a redundant variable
-        for(int i = 0; i < nbOfAvailableCategories; i++) {
-            this.pairedIcons.add(i, new SingleIconPair("",""));
+            if (!Files.isReadable(filePath)) {
+                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File is not readable");
+            }
+        }else{
+            OriginalKmlData originalKmlData = new OriginalKmlData(iconSetPresetFilePath);
+            originalKmlData.removeIconSetPresetData();
+
+            try {
+                presetLines = getStringListFromCsv(new BufferedReader(new InputStreamReader(new FileInputStream(iconSetPresetFilePath))));
+            }catch(Exception e){
+                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail on reading the file");
+                LOGGER.log(Level.WARNING, "Exception log:\n");
+                e.printStackTrace();
+            }
+
+            this.kmlHeader = originalKmlData.getIconsHeader();
+            this.iconList = originalKmlData.getIconList();
+
+            // generate empty pairedIcons data
+            nbOfAvailableCategories = numberOfCategories; //not a redundant variable
+            for(int i = 0; i < nbOfAvailableCategories; i++) {
+                this.pairedIcons.add(i, new SingleIconPair("",""));
+            }
+
+            // remove header from presetLines
+
+            // fill pairedIcons icon data
+            generateIconSetFromData();
+
+            readIconSetPresetFile(presetLines);
         }
-
-        generateIconSetFromData();
-
-        readIconSetPresetFile(iconSetPresetFilePath);
     }
 
     public String getKmlHeader() {
@@ -208,38 +230,14 @@ public class IconSet {
         return tempPairedIcons;
     }
 
-    public boolean isValidIconSetPresetFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
+    public boolean isValidIconSetPresetFile(ArrayList<String> lineList) throws FileNotFoundException, UnsupportedEncodingException {
         //todo: apply more dry-coding for reading and validating iconSetPreset files
         // they could avoid reading files for multiple time, single one would be enough
         // maybe create a separate temp object for such data from file and use it for validation
         // and copying data to the actual iconSet?
         LOGGER.info("IconSetPresetFile validation started");
 
-        Path filePath = Paths.get(path);
         List<SingleIconPair> tempPairedIcons = new ArrayList<SingleIconPair>();
-        ArrayList<String> lineList;
-
-        if(!Files.exists(filePath)){
-            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File does not exist");
-            return false;
-        }
-
-        if(!Files.isReadable(filePath)){
-            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File is not readable");
-            return false;
-        }
-
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
-
-        try {
-            lineList = getStringListFromCsv(reader);
-        }catch(Exception e){
-            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail on reading the file");
-            LOGGER.log(Level.WARNING, "Exception log:\n");
-            e.printStackTrace();
-
-            return false;
-        }
 
         if(!lineList.get(0).contains("<?xml version") || !lineList.get(1).contains("kml")){
             LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File does not contain KML Header");
@@ -269,7 +267,7 @@ public class IconSet {
             for (int i = 0; i < nbOfAvailableCategories; i++) {
                 isValidCategoryData = false;
                 for (int j = 0; j < pairedIcons.size(); j++) {
-                    if (pairedIcons.get(j).category.equals(tempPairedIcons.get(i).category)) {
+                    if (!pairedIcons.get(j).category.equals(tempPairedIcons.get(i).category)) {
                         isValidCategoryData = true;
                         break;
                     }
@@ -303,16 +301,48 @@ public class IconSet {
         return true;
     }
 
+    public void readIconSetPresetFile(ArrayList<String> lineList) throws FileNotFoundException, UnsupportedEncodingException {
+        cleanupIconSetData();
+
+        ArrayList<String> oldList = new ArrayList<String>(lineList);
+
+        deleteHeaderFromLineList(lineList);
+        nbOfAvailableCategories = lineList.size();
+        pairedIcons = getCategoriesFromCsvList(lineList);
+
+        if(!isValidIconSetPresetFile(oldList)){
+            cleanupIconSetData();
+            return;
+        }
+    }
+
     public void readIconSetPresetFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
-        if(!isValidIconSetPresetFile(path)){
+        Path filePath = Paths.get(path);
+        ArrayList<String> lineList = new ArrayList<String>();
+
+        if(!Files.exists(filePath)) {
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File does not exist");
+
+            if (!Files.isReadable(filePath)) {
+                LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail. File is not readable");
+            }
+        }
+
+        try {
+            lineList = getStringListFromCsv(new BufferedReader(new InputStreamReader(new FileInputStream(path))));
+        }catch(Exception e){
+            LOGGER.log(Level.WARNING, "IconSetPresetFile validation fail on reading the file");
+            LOGGER.log(Level.WARNING, "Exception log:\n");
+            e.printStackTrace();
+        }
+
+        if(!isValidIconSetPresetFile(lineList)){
             return;
         }
 
         cleanupIconSetData();
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
-
-        ArrayList<String> lineList = getStringListFromCsv(reader);
         deleteHeaderFromLineList(lineList);
         nbOfAvailableCategories = lineList.size();
         pairedIcons = getCategoriesFromCsvList(lineList);
