@@ -136,13 +136,13 @@ public class MainWindowController {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 try{
                     if(StringUtils.isNotBlank(newValue)){
-                        presetPath = newValue;
+                        presetPath = newValue.trim();
                         loadDataButton.setDisable(false);
                     }else{
                         loadDataButton.setDisable(true);
                     }
                 }catch(Exception e){
-                    presetPath = oldValue;
+                    presetPath = oldValue.trim();
                 }
             }
         });
@@ -152,10 +152,10 @@ public class MainWindowController {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 try{
                     if(StringUtils.isNotBlank(newValue)){
-                        csvPath = newValue;
+                        csvPath = newValue.trim();
                     }
                 }catch(Exception e){
-                    csvPath = oldValue;
+                    csvPath = oldValue.trim();
                 }
             }
         });
