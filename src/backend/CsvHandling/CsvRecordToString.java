@@ -108,7 +108,7 @@ public class CsvRecordToString {
                 "\t\t\t<range>1108953.793528179</range>\n"+
                 "\t\t\t<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n");
         placemarkBuilder.append("\t\t</LookAt>\n");
-        placemarkBuilder.append("\t\t<styleUrl>#").append(getIconName(lastCategory)).append("</styleUrl>\n"); //todo: implement getIconName
+        placemarkBuilder.append("\t\t<styleUrl>#").append(getIconName(lastCategory)).append("</styleUrl>\n");
         placemarkBuilder.append("\t\t<Point>\n");
         placemarkBuilder.append("\t\t\t<gx:drawOrder>1</gx:drawOrder>\n" + "\t\t\t<coordinates>").append(longitude).append(",").append(latitude).append(",0</coordinates>\n");
         placemarkBuilder.append("\t\t</Point>\n");
@@ -134,7 +134,7 @@ public class CsvRecordToString {
         return this.iconSet.getIconForCategory(lastCategory);
     }
 
-    public String getRecord(){ //todo: refactor later, this method may be redundant
+    public String getRecord(){
         return getPinData();
     }
 

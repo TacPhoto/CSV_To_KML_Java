@@ -55,7 +55,6 @@ public class KmlWriter {
 
     @NotNull
     private String makeIndent(int indentsNum) {
-        //todo: when functionality is working, it should no longer create a string but directly write into a file
         StringBuilder indent = new StringBuilder("");
 
         for (int i = 0; i < indentsNum; i++)
@@ -189,11 +188,12 @@ public class KmlWriter {
         return differencesBetweenPaths;
     }
 
+    @Deprecated
     private String writeAllDataRecords() {
         /**
-         * Saves all data records to file in a form of CSV file that lacks only a header
+         * Returns String with data of all records
+         * in a form of a KML file that lacks a header
          */
-        //todo: current implementation returns a String. It should write to the file
         StringBuilder result = new StringBuilder();
 
         //open first folder
@@ -259,6 +259,73 @@ public class KmlWriter {
         return result.toString();
     }
 
+    private void writeAllDataRecords(PrintWriter writer) {
+        /** Write a KML records to a file.
+         *  Does not append header.
+         */
+
+        //open first folder
+        String[] lineSplit = lineList.get(1).split(";");
+        for (int i = 0; i < foldersAmount; i++) {
+            writer.append(makeFolder(lineSplit[i]));
+        }
+
+        //write all records
+        for (int i = 1; i < lineList.size(); i++) { //starting from 1 because first line is a csv header
+            boolean skipLast = (i == lineList.size() - 1);
+
+            String currentLine = getPathForLine(
+                    lineList.get(i)
+                            .replaceAll("\n", "")
+                            .replaceAll("\t", "")
+                            .replaceAll(" ", "")
+            );
+            String nextLine = null;
+            if (!skipLast) {
+                nextLine = getPathForLine(recordWithLine(
+                        lineList.get(i + 1))
+                        .replaceAll("\n", "")
+                        .replaceAll("\t", "")
+                        .replaceAll(" ", "")
+                );
+            } else {
+                for (int j = 0; j < foldersAmount - 1; j++) { //folders amount - 1 because there is one semicolon num then folders num ex. "fol1;fol2"
+                    nextLine += ";";
+                }
+                currentIndent++; //prevents indentation level issues caused by comparing last line with empty line composed of spaces and semicolons
+            }
+
+            //write a record
+            csvRecordToString.setLine(lineList.get(i));
+            writer.append(csvRecordToString.getRecord());
+
+            //check if needs folder change
+            int NumberOfDifferencesBetweenPaths = skipLast ? 0 : getNumberOfDifferencesBetweenPaths(currentLine, nextLine);
+            if (NumberOfDifferencesBetweenPaths != 0) {
+                //close folder
+                if (skipLast) {
+                    NumberOfDifferencesBetweenPaths = -1; //prevents closing main kml folder too early
+                }
+
+                for (int j = 0; j < NumberOfDifferencesBetweenPaths; j++) {
+                    writer.append(closeFolder());
+                }
+
+                //open folder
+                String[] differences = getDifferencesBetweenPaths(currentLine, nextLine);
+                for (int j = differences.length; j > 0; j--) {
+                    writer.append(makeFolder(differences[j - 1]));
+                }
+            }
+        }
+
+        //close last folder
+        for (int i = 0; i < currentIndent - 1; i++) {
+            writer.append(closeFolder());
+        }
+    }
+
+    @Deprecated
     public String writeKMLFile() {
         StringBuilder result = new StringBuilder();
 
@@ -272,6 +339,32 @@ public class KmlWriter {
         result.append("</Document>\n</kml>\n");
 
         return result.toString();
+    }
+
+    public boolean writeKMLFile(boolean redundant) throws FileNotFoundException {
+        // TODO: this method should replace its String equivalent
+        //  in future when code is mature enough to let it write
+        //  directly to file instead of returning String.
+        //  String may be currently quite useful for debugging
+        //  redundant var is added only to avoid method overloading errors
+        try (final PrintWriter writer = new PrintWriter
+                (new BufferedWriter(
+                        new OutputStreamWriter
+                                (new FileOutputStream(outputPath), StandardCharsets.UTF_8)
+                ));){
+
+        writer.write(kmlHeader);
+        // writer.write(writeAllDataRecords());
+        writeAllDataRecords(writer);
+        writer.write("</Document>\n</kml>\n");
+
+        writer.close();
+            return true;
+
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     public void debugTest() throws FileNotFoundException, UnsupportedEncodingException {
@@ -323,16 +416,5 @@ public class KmlWriter {
 
     }
 
-    public void saveKML() throws FileNotFoundException, UnsupportedEncodingException {
-        String result = writeKMLFile();
-        final PrintWriter writer = new PrintWriter
-                (new BufferedWriter(
-                        new OutputStreamWriter
-                                (new FileOutputStream(outputPath), StandardCharsets.UTF_8)
-                ));
-
-        writer.write(result);
-        writer.close();
-    }
 }
 //TODO: when everything is ready, switch from keeping data int Strings to writing them directly to file (if possible)

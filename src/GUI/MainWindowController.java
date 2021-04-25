@@ -234,20 +234,31 @@ public class MainWindowController {
     }
 
     public void setMessageLabelText(String errorText){
-        LOGGER.info(errorText);
+        /** Set GUI label message as error and log it as Level.WARNING
+         * label will be red
+         */
+        LOGGER.setLevel(Level.WARNING); // temporarily change logger level for setMessageLabelText will
+        setMessageLabelText(errorText, Color.RED);
+        LOGGER.setLevel(Level.INFO);
+    }
 
-        messageContentLabel.setTextFill(Color.RED);
+    public void setMessageLabelText(String message, Color color){
+        /** Set GUI label message as and log it as Level.INFO
+         */
+        LOGGER.info(message);
+
+        messageContentLabel.setTextFill(color);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
-        if(errorText == null){
-            errorText = dtf.format(now) + "  Unknown Error";
+        if(message == null){
+            message = dtf.format(now) + "  Unknown Error";
         }else{
-            errorText = dtf.format(now) + "  " + errorText;
+            message = dtf.format(now) + "  " + message;
         }
 
-        messageContentLabel.setText(errorText);
+        messageContentLabel.setText(message);
     }
 
     private File selectOpenFile() {
@@ -394,10 +405,7 @@ public class MainWindowController {
 
         iconSet.saveIconSetPresetFile(outputPresetPath);
 
-        messageContentLabel.setTextFill(Color.GREEN);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        messageContentLabel.setText(dtf.format(now) + " Preset successfully saved as " + outputPresetPath);
+        setMessageLabelText(" Preset successfully saved as " + outputPresetPath, Color.GREEN);
     }
 
     public Integer getNumberOfCategories() {
@@ -573,6 +581,7 @@ public class MainWindowController {
     }
 
     public void saveKMLFile() throws IOException {
+        LOGGER.info("saveKMLFile()");
         refreshIconSetPairedIcons();
         //TODO: handle hasRating
         //TODO: handle maxRate
@@ -586,9 +595,19 @@ public class MainWindowController {
                 csvRecordToStringInitData
                 );
 
-        kmlWriter.saveKML();
+        if(kmlWriter.writeKMLFile(true)){
+            setMessageLabelText("Successfully saved a KML File",
+                    Color.GREEN);
+        }else{
+            setMessageLabelText("saveKMLFile() - kmlWriter.writeKMLFile | " +
+                    "Failed to save KML file ");
+        }
     }
 }
 
 
 //TODO: file selectors must show files (see preset file selector)
+
+// TODO: Replace string below with proper file name in final KML
+//  <Document>
+//  <name>ShortExample.kml</name>
