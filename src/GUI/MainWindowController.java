@@ -1,7 +1,9 @@
 package GUI;
 
 import backend.CsvHandling.CsvReader;
+import backend.CsvHandling.CsvRecordToStringInitData;
 import backend.CsvHandling.LastCategoryScanner;
+import backend.KmlHandling.KmlWriter;
 import backend.KmlHandling.OriginalKmlData;
 import backend.Misc.IconSet;
 import javafx.beans.value.ChangeListener;
@@ -443,6 +445,7 @@ public class MainWindowController {
         if (csvPath != null) {
             CsvReader csvReader = new CsvReader(csvPath);
             sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
+            lineList = csvReader.getLineList();
             lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
             categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
 
@@ -567,6 +570,25 @@ public class MainWindowController {
             iconSet.setIconForCategoryIndex(i, iconCol.getCellObservableValue(i).getValue().toString());
         }
 
+    }
 
+    public void saveKMLFile() throws IOException {
+        refreshIconSetPairedIcons();
+        //TODO: handle hasRating
+        //TODO: handle maxRate
+        //TODO: handle addLastCategory
+        CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(iconList, getNumberOfCategories(),5, lineList.get(1), false, true, iconSet);
+
+        KmlWriter kmlWriter = new KmlWriter(lineList,
+                kmlHeader,
+                getNumberOfCategories(),
+                outputKMLPath,
+                csvRecordToStringInitData
+                );
+
+        kmlWriter.saveKML();
     }
 }
+
+
+//TODO: file selectors must show files (see preset file selector)

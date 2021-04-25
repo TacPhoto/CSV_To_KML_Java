@@ -97,7 +97,7 @@
                <StackPane.margin>
                   <Insets left="10.0" right="10.0" top="80.0" />
                </StackPane.margin></Button>
-            <Button fx:id="processSaveMapButton" layoutX="3.0" layoutY="236.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="488.0" text="Process And Save The Map" StackPane.alignment="TOP_CENTER">
+            <Button fx:id="processSaveMapButton" layoutX="3.0" layoutY="236.0" mnemonicParsing="false" onAction="#saveKMLFile" prefHeight="25.0" prefWidth="488.0" text="Process And Save The Map" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
                   <Insets left="10.0" right="10.0" top="218.0" />
                </StackPane.margin></Button>

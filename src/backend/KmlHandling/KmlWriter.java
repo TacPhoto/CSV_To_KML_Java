@@ -15,7 +15,7 @@ public class KmlWriter {
     public int categoriesAmount;
     public int foldersAmount;     //categoriesAmount - 1 because last category is not used to make folders but to assign icon
     private int currentIndent;    //stores current indentation level. It should not ba affected by base indent in a single record.
-                                  //It should be only affected by Folder indentation level;
+    //It should be only affected by Folder indentation level;
     private CsvRecordToStringInitData csvRecordToStringInitData;
     private CsvRecordToString csvRecordToString;
 
@@ -30,6 +30,16 @@ public class KmlWriter {
         this.csvRecordToString = new CsvRecordToString(csvRecordToStringInitData);
     }
 
+    public KmlWriter(List<String> lineList, String kmlHeader, int categoriesAmount, String outputPath, CsvRecordToString csvRecordToString) {
+        this.lineList = lineList;
+        this.kmlHeader = kmlHeader;
+        this.outputPath = outputPath;
+        this.categoriesAmount = categoriesAmount;
+        this.foldersAmount = categoriesAmount - 1;
+        this.currentIndent = 1;
+        this.csvRecordToString = csvRecordToString;
+    }
+
     /**
      * this writer shall write us an kml file
      * it will begin by pasting header into kml then it should write records one by one
@@ -37,34 +47,34 @@ public class KmlWriter {
      * inside kml file with the next one. If it's blank, it's the end of the file.
      * it will close folder in kml each time it finds a difference in path, starting from the end of path.
      * there should be no bugs because records list is already sorted
-     *
+     * <p>
      * indents in kml will be written sequentionally by a separate function
      * records will be written with CsvRecordToString
      * folderCheck-indent-CsvRecordToString-folderCheck-indent-Csv... and so on
      */
 
     @NotNull
-    private String makeIndent(int indentsNum){
+    private String makeIndent(int indentsNum) {
         //todo: when functionality is working, it should no longer create a string but directly write into a file
         StringBuilder indent = new StringBuilder("");
 
-        for(int i = 0; i < indentsNum; i++)
+        for (int i = 0; i < indentsNum; i++)
             indent.append("\t");
 
         return indent.toString();
     }
 
     @NotNull
-    private String getPathForLine(String line){
+    private String getPathForLine(String line) {
         int lastFolder = 0;
         int counter = 0;
 
-        for(int i = 0; i < line.length(); i++) {
+        for (int i = 0; i < line.length(); i++) {
             lastFolder = i;
 
             if (line.charAt(i) == ';') {
                 counter++;
-                if( counter == foldersAmount)
+                if (counter == foldersAmount)
                     break;
             }
         }
@@ -75,17 +85,17 @@ public class KmlWriter {
     }
 
     @NotNull
-    private String makeFolder(String folderName){
+    private String makeFolder(String folderName) {
         return makeIndent(currentIndent++) + "<Folder>\n"
                 + makeIndent(currentIndent) + "<name>" + folderName + "</name>\n";
     }
 
-    private String closeFolder(){
+    private String closeFolder() {
         return makeIndent(--currentIndent) + "</Folder>\n";
     }
 
     @NotNull
-    private String recordWithLine(String record){
+    private String recordWithLine(String record) {
         /**
          * Returns a single data record with proper indentation
          */
@@ -98,7 +108,7 @@ public class KmlWriter {
         try (BufferedReader reader = new BufferedReader(new StringReader(record))) {
             String currentLine = reader.readLine();
 
-            while(currentLine != null) {
+            while (currentLine != null) {
                 finalRecord.append(makeIndent(currentIndent));
                 finalRecord.append(currentLine);
                 finalRecord.append("\n");
@@ -114,7 +124,7 @@ public class KmlWriter {
     }
 
     @NotNull
-    private String getFolderNameFromPathAt(String path, int index){
+    private String getFolderNameFromPathAt(String path, int index) {
         /**
          * Returns specific folder name from a path basing on its index
          * in hierarchy
@@ -124,7 +134,7 @@ public class KmlWriter {
         int counter = 0;
         StringBuilder folderName = new StringBuilder("");
 
-        for(int i = 0; i < path.length(); i++) {
+        for (int i = 0; i < path.length(); i++) {
             char character = path.charAt(i);
             if (character == ';') {
                 counter++;
@@ -138,26 +148,26 @@ public class KmlWriter {
         return folderName.toString();
     }
 
-    private int getNumberOfDifferencesBetweenPaths(String firstPath, String secondPath){
+    private int getNumberOfDifferencesBetweenPaths(String firstPath, String secondPath) {
         /**
-        * Returns number of different folders in Paths. It can be used for folder creation
+         * Returns number of different folders in Paths. It can be used for folder creation
          * and closing.
          * It should work fine because the program uses already sorted database and differences
          * go without huge variation.
          */
         int differencesNum = 0;
 
-        if(firstPath.equals(secondPath))
+        if (firstPath.equals(secondPath))
             return 0;
 
-        for(int i = foldersAmount; i >0; i--)
-            if( !getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)) )
+        for (int i = foldersAmount; i > 0; i--)
+            if (!getFolderNameFromPathAt(firstPath, i).equals(getFolderNameFromPathAt(secondPath, i)))
                 differencesNum++;
 
         return differencesNum;
     }
 
-    private String[] getDifferencesBetweenPaths(String firstPath, String secondPath){
+    private String[] getDifferencesBetweenPaths(String firstPath, String secondPath) {
         /**
          * Returns String[] which contains folder names from secondPath which don't match firstPath
          */
@@ -168,10 +178,10 @@ public class KmlWriter {
         String secondFolder = null;
 
         int counter = 0;
-        for(int i = foldersAmount; i > 0 ; --i){
+        for (int i = foldersAmount; i > 0; --i) {
             firstFolder = getFolderNameFromPathAt(firstPath, i);
-            secondFolder = getFolderNameFromPathAt(secondPath, i );
-            if( ! firstFolder.equals(secondFolder)) {
+            secondFolder = getFolderNameFromPathAt(secondPath, i);
+            if (!firstFolder.equals(secondFolder)) {
                 differencesBetweenPaths[counter] = getFolderNameFromPathAt(secondPath, i);
                 counter++;
             }
@@ -179,7 +189,7 @@ public class KmlWriter {
         return differencesBetweenPaths;
     }
 
-    private String writeAllDataRecords(){
+    private String writeAllDataRecords() {
         /**
          * Saves all data records to file in a form of CSV file that lacks only a header
          */
@@ -188,33 +198,33 @@ public class KmlWriter {
 
         //open first folder
         String[] lineSplit = lineList.get(1).split(";");
-        for(int i = 0; i < foldersAmount; i++){
+        for (int i = 0; i < foldersAmount; i++) {
             result.append(makeFolder(lineSplit[i]));
         }
 
         //write all records
-        for(int i = 1; i < lineList.size(); i++){ //starting from 1 because first line is a csv header
-            boolean skipLast = (i == lineList.size()-1);
+        for (int i = 1; i < lineList.size(); i++) { //starting from 1 because first line is a csv header
+            boolean skipLast = (i == lineList.size() - 1);
 
             String currentLine = getPathForLine(
                     lineList.get(i)
-                    .replaceAll("\n","")
-                    .replaceAll("\t","")
-                    .replaceAll(" ","")
+                            .replaceAll("\n", "")
+                            .replaceAll("\t", "")
+                            .replaceAll(" ", "")
             );
             String nextLine = null;
-            if(!skipLast) {
+            if (!skipLast) {
                 nextLine = getPathForLine(recordWithLine(
                         lineList.get(i + 1))
-                        .replaceAll("\n","")
-                        .replaceAll("\t","")
-                        .replaceAll(" ","")
+                        .replaceAll("\n", "")
+                        .replaceAll("\t", "")
+                        .replaceAll(" ", "")
                 );
-            }else{
-                for(int j = 0; j < foldersAmount - 1; j++){ //folders amount - 1 because there is one semicolon num then folders num ex. "fol1;fol2"
+            } else {
+                for (int j = 0; j < foldersAmount - 1; j++) { //folders amount - 1 because there is one semicolon num then folders num ex. "fol1;fol2"
                     nextLine += ";";
                 }
-               currentIndent++; //prevents indentation level issues caused by comparing last line with empty line composed of spaces and semicolons
+                currentIndent++; //prevents indentation level issues caused by comparing last line with empty line composed of spaces and semicolons
             }
 
             //write a record
@@ -223,33 +233,33 @@ public class KmlWriter {
 
             //check if needs folder change
             int NumberOfDifferencesBetweenPaths = skipLast ? 0 : getNumberOfDifferencesBetweenPaths(currentLine, nextLine);
-            if(NumberOfDifferencesBetweenPaths != 0){
+            if (NumberOfDifferencesBetweenPaths != 0) {
                 //close folder
-                if (skipLast){
+                if (skipLast) {
                     NumberOfDifferencesBetweenPaths = -1; //prevents closing main kml folder too early
                 }
 
-                    for (int j = 0; j < NumberOfDifferencesBetweenPaths; j++) {
-                        result.append(closeFolder());
-                    }
+                for (int j = 0; j < NumberOfDifferencesBetweenPaths; j++) {
+                    result.append(closeFolder());
+                }
 
                 //open folder
                 String[] differences = getDifferencesBetweenPaths(currentLine, nextLine);
-                for(int j = differences.length; j > 0; j--){
+                for (int j = differences.length; j > 0; j--) {
                     result.append(makeFolder(differences[j - 1]));
                 }
             }
         }
 
         //close last folder
-        for(int i = 0; i < currentIndent - 1; i++){
+        for (int i = 0; i < currentIndent - 1; i++) {
             result.append(closeFolder());
         }
 
         return result.toString();
     }
 
-    public String writeKMLFile(){
+    public String writeKMLFile() {
         StringBuilder result = new StringBuilder();
 
         //write header
@@ -312,6 +322,17 @@ public class KmlWriter {
         writer.close();
 
     }
-}
 
+    public void saveKML() throws FileNotFoundException, UnsupportedEncodingException {
+        String result = writeKMLFile();
+        final PrintWriter writer = new PrintWriter
+                (new BufferedWriter(
+                        new OutputStreamWriter
+                                (new FileOutputStream(outputPath), StandardCharsets.UTF_8)
+                ));
+
+        writer.write(result);
+        writer.close();
+    }
+}
 //TODO: when everything is ready, switch from keeping data int Strings to writing them directly to file (if possible)
