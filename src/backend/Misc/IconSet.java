@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -172,7 +173,7 @@ public class IconSet {
         final PrintWriter writer = new PrintWriter
                 (new BufferedWriter(
                         new OutputStreamWriter
-                                (new FileOutputStream(path), "utf-8")
+                                (new FileOutputStream(path), StandardCharsets.UTF_8)
                 ));
 
         writer.write(kmlHeader);
@@ -342,7 +343,7 @@ public class IconSet {
 
         cleanupIconSetData();
 
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8"));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
         deleteHeaderFromLineList(lineList);
         nbOfAvailableCategories = lineList.size();
         pairedIcons = getCategoriesFromCsvList(lineList);

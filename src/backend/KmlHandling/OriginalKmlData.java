@@ -51,7 +51,7 @@ public class OriginalKmlData {
             while ((line = reader.readLine()) != null) {
                 if (line.equals("\t<Folder>"))
                     break;
-                str.append(line + '\n');
+                str.append(line).append('\n');
             }
         } catch (IOException e) {
             LOGGER.info("!!!KML HEADER READER CAUGHT AN EXCEPTION!!!");

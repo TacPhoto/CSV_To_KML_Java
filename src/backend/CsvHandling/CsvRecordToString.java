@@ -71,21 +71,20 @@ public class CsvRecordToString {
 
         trimStringArray(lineSplit);
 
-        String longitude = lineSplit[categoriesAmount];
-        String latitude = lineSplit[categoriesAmount + 1];
+        String latitude = lineSplit[categoriesAmount];
+        String longitude = lineSplit[categoriesAmount + 1];
         String name = lineSplit[categoriesAmount + 2];
         String rating = hasRating ? lineSplit[lineSplit.length - 1] + "//" + maxRate : ""; //todo: allow to input number instead of checking number of characters
         lastCategory =  addLastCategory ? lineSplit[categoriesAmount - 1] : ""; //tolerates 0 categories variant
 
         StringBuilder descriptionBuilder = new StringBuilder();
 
-        descriptionBuilder.append(lineSplit[categoriesAmount + 3] + ", " + //build 1st line of the description
-                lastCategory +
-                ", " + rating);
+        descriptionBuilder.append(lineSplit[categoriesAmount + 3]).append(", ").append( //build 1st line of the description
+                lastCategory).append(", ").append(rating);
 
         int loopEnd = hasRating ? lineSplit.length - 1 : lineSplit.length;
         for (int i  = categoriesAmount + 4; i < loopEnd; i++){ //build rest of the description
-            descriptionBuilder.append(lineSplit[i] + "\n");
+            descriptionBuilder.append(lineSplit[i]).append("\n");
         }
 
         String description = descriptionBuilder.toString();
@@ -99,21 +98,19 @@ public class CsvRecordToString {
         StringBuilder placemarkBuilder = new StringBuilder();
 
         placemarkBuilder.append("\t<Placemark>\n");
-        placemarkBuilder.append("\t\t<name>"+name+"</name>\n");
-        placemarkBuilder.append("\t\t<description>"+description+"</description>\n");
+        placemarkBuilder.append("\t\t<name>").append(name).append("</name>\n");
+        placemarkBuilder.append("\t\t<description>").append(description).append("</description>\n");
         placemarkBuilder.append("\t\t<LookAt>\n");
-        placemarkBuilder.append("\t\t\t<longitude>"+longitude+"</longitude>\n"+
-                "\t\t\t<latitude>"+latitude+"</latitude>\n");
+        placemarkBuilder.append("\t\t\t<longitude>").append(longitude).append("</longitude>\n").append("\t\t\t<latitude>").append(latitude).append("</latitude>\n");
         placemarkBuilder.append("\t\t\t<altitude>0</altitude>\n"+
                 "\t\t\t<heading>7</heading>\n"+
                 "\t\t\t<tilt>0</tilt>\n"+
                 "\t\t\t<range>1108953.793528179</range>\n"+
                 "\t\t\t<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n");
         placemarkBuilder.append("\t\t</LookAt>\n");
-        placemarkBuilder.append("\t\t<styleUrl>#"+getIconName(lastCategory)+"</styleUrl>\n"); //todo: implement getIconName
+        placemarkBuilder.append("\t\t<styleUrl>#").append(getIconName(lastCategory)).append("</styleUrl>\n"); //todo: implement getIconName
         placemarkBuilder.append("\t\t<Point>\n");
-        placemarkBuilder.append("\t\t\t<gx:drawOrder>1</gx:drawOrder>\n" +
-                "\t\t\t<coordinates>"+longitude+","+latitude+",0</coordinates>\n");
+        placemarkBuilder.append("\t\t\t<gx:drawOrder>1</gx:drawOrder>\n" + "\t\t\t<coordinates>").append(longitude).append(",").append(latitude).append(",0</coordinates>\n");
         placemarkBuilder.append("\t\t</Point>\n");
         placemarkBuilder.append("\t</Placemark>\n");
 

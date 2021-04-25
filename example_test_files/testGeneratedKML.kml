@@ -219,8 +219,8 @@
 		<description>some city in England, likely a capital city, capital, 5
 </description>
 		<LookAt>
-			<longitude>51.5085300</longitude>
-			<latitude>-0.1257400</latitude>
+			<longitude>-0.1257400</longitude>
+			<latitude>51.5085300</latitude>
 			<altitude>0</altitude>
 			<heading>7</heading>
 			<tilt>0</tilt>
@@ -230,7 +230,7 @@
 		<styleUrl>#msn_electronics</styleUrl>
 		<Point>
 			<gx:drawOrder>1</gx:drawOrder>
-			<coordinates>51.5085300,-0.1257400,0</coordinates>
+			<coordinates>-0.1257400,51.5085300,0</coordinates>
 		</Point>
 	</Placemark>
 		</Folder>
@@ -241,8 +241,8 @@
 		<description>another city in Poland, big, 5
 </description>
 		<LookAt>
-			<longitude>51.10000</longitude>
-			<latitude>17.0333300</latitude>
+			<longitude>17.0333300</longitude>
+			<latitude>51.10000</latitude>
 			<altitude>0</altitude>
 			<heading>7</heading>
 			<tilt>0</tilt>
@@ -252,15 +252,16 @@
 		<styleUrl>#m_ylw</styleUrl>
 		<Point>
 			<gx:drawOrder>1</gx:drawOrder>
-			<coordinates>51.10000,17.0333300,0</coordinates>
+			<coordinates>17.0333300,51.10000,0</coordinates>
 		</Point>
 	</Placemark>
 	<Placemark>
-		<name>Warsaw, some city in Poland, likely a capital city</name>
-		<description>5, capital, </description>
+		<name>Warsaw</name>
+		<description>some city in Poland, likely a capital city, capital, 5
+</description>
 		<LookAt>
-			<longitude>39.907500</longitude>
-			<latitude>116.397230</latitude>
+			<longitude>116.397230</longitude>
+			<latitude>39.907500</latitude>
 			<altitude>0</altitude>
 			<heading>7</heading>
 			<tilt>0</tilt>
@@ -270,7 +271,7 @@
 		<styleUrl>#msn_electronics</styleUrl>
 		<Point>
 			<gx:drawOrder>1</gx:drawOrder>
-			<coordinates>39.907500,116.397230,0</coordinates>
+			<coordinates>116.397230,39.907500,0</coordinates>
 		</Point>
 	</Placemark>
 		</Folder>
@@ -284,8 +285,8 @@
 		<description>Italian village, small, 5
 </description>
 		<LookAt>
-			<longitude>44.1038</longitude>
-			<latitude>9.7235</latitude>
+			<longitude>9.7235</longitude>
+			<latitude>44.1038</latitude>
 			<altitude>0</altitude>
 			<heading>7</heading>
 			<tilt>0</tilt>
@@ -295,7 +296,7 @@
 		<styleUrl>#msn_dollar</styleUrl>
 		<Point>
 			<gx:drawOrder>1</gx:drawOrder>
-			<coordinates>44.1038,9.7235,0</coordinates>
+			<coordinates>9.7235,44.1038,0</coordinates>
 		</Point>
 	</Placemark>
 			</Folder>

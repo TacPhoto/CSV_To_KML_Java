@@ -19,7 +19,7 @@ public class CsvReader {
         LOGGER.info("CSV reader initialization. Path used: " + csvPath);
         this.reader = new BufferedReader
                 (new InputStreamReader
-                        (new FileInputStream(csvPath), "utf-8")
+                        (new FileInputStream(csvPath), StandardCharsets.UTF_8)
                 );
     }
 
@@ -71,13 +71,13 @@ public class CsvReader {
 
         LOGGER.info("CREATING A SORTED STRING FOR A NEW CSV");
 
-        String listString = "";
+        StringBuilder listString = new StringBuilder();
 
         for (String line : lineList)
-            listString += line + "\n";
+            listString.append(line).append("\n");
 
         LOGGER.info("SORTED STRING FOR A NEW CSV READY");
 
-        return listString;
+        return listString.toString();
     }
 }

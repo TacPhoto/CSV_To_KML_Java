@@ -255,7 +255,7 @@ public class MainWindowController {
 
     private File selectOpenFile(String extension) {
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
 
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
@@ -270,7 +270,7 @@ public class MainWindowController {
 
     private File selectSaveFile(String extension) {
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
 
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
@@ -278,7 +278,7 @@ public class MainWindowController {
         return fileChooser.showSaveDialog(primaryStage);
     }
 
-    public void selectOutputPresetFile() {
+    public boolean selectOutputPresetFile() {
         try {
             outputPresetPath = selectSaveFile("kmlpreset").getPath();
 
@@ -289,21 +289,24 @@ public class MainWindowController {
             presetToSavePathTextField.setText(outputPresetPath);
 
             if(iconCategoryTable != null) {
-                if(iconCategoryTable.getItems().get(0).getIcon() != null)
-                {
-                    savePresetButton.setDisable(false);
-                }else{
-                    savePresetButton.setDisable(true);
-                }
+                savePresetButton.setDisable(iconCategoryTable.getItems().get(0).getIcon() == null);
             }
+
+            return true;
         } catch (Exception e) {
-            //case when no file was selected. Ignore
+            //case when no file was selected.
+            return false;
         }
     }
 
-    public void selectOutputKMLFile() {
+    public boolean selectOutputKMLFile() {
         try {
             outputKMLPath = selectSaveFile("kml").getPath();
+
+            if(!outputKMLPath.toLowerCase().endsWith(".kml")){
+                outputKMLPath = outputKMLPath + ".kml";
+            }
+
             outputPathTextField.setText(outputKMLPath);
 
             if(iconCategoryTable != null) {
@@ -314,8 +317,10 @@ public class MainWindowController {
                 processSaveMapButton.setDisable(true);
             }
 
+            return true;
         } catch (Exception e) {
-            //case when no file was selected. Ignore
+            //case when no file was selected.
+            return false;
         }
     }
 
@@ -346,11 +351,7 @@ public class MainWindowController {
     private boolean isFilePathValid(String path){
         File file = new File(path);
 
-        if(file.canRead() && file.exists()){
-            return true;
-        }
-
-        return false;
+        return file.canRead() && file.exists();
     }
 
     private boolean isValidCSV(String path){
@@ -358,11 +359,7 @@ public class MainWindowController {
             return false;
         }
 
-        if(!path.toLowerCase().endsWith(".csv")){
-            return false;
-        }
-
-        return true;
+        return path.toLowerCase().endsWith(".csv");
     }
 
     private boolean isValidKML(String path){
@@ -370,11 +367,7 @@ public class MainWindowController {
             return false;
         }
 
-        if(!path.toLowerCase().endsWith(".kml")){
-            return false;
-        }
-
-        return true;
+        return path.toLowerCase().endsWith(".kml");
     }
 
     public void setPaths(String csvPath
@@ -507,8 +500,6 @@ public class MainWindowController {
                     )
             );
         }
-
-
 
         iconCategoryTable.refresh();
     }

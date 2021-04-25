@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -28,7 +29,7 @@ public class CsvReaderTest {
 
     CsvReaderTest() throws IOException {
         this.csvReader = new CsvReader(csvPath);
-        this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(csvPath), "utf-8"));
+        this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(csvPath), StandardCharsets.UTF_8));
 
         csvReader.getSortedCsvReadyString(); //we need to run it to make getLineListTest() work
     }

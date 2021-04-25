@@ -5,6 +5,7 @@ import backend.CsvHandling.CsvRecordToStringInitData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class KmlWriter {
@@ -186,7 +187,7 @@ public class KmlWriter {
         StringBuilder result = new StringBuilder();
 
         //open first folder
-        String lineSplit[] = lineList.get(1).split(";");
+        String[] lineSplit = lineList.get(1).split(";");
         for(int i = 0; i < foldersAmount; i++){
             result.append(makeFolder(lineSplit[i]));
         }
@@ -304,7 +305,7 @@ public class KmlWriter {
         final PrintWriter writer = new PrintWriter
                 (new BufferedWriter(
                         new OutputStreamWriter
-                                (new FileOutputStream("example_test_files/testGeneratedKML.kml"), "utf-8")
+                                (new FileOutputStream("example_test_files/testGeneratedKML.kml"), StandardCharsets.UTF_8)
                 ));
 
         writer.write(result);
