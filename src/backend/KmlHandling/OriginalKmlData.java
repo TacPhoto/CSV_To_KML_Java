@@ -93,6 +93,7 @@ public class OriginalKmlData {
             }
         }
 
+
         this.IconsHeader = finalStringBuilder.toString();
     }
 
@@ -100,7 +101,23 @@ public class OriginalKmlData {
         iconList = iconList.stream().distinct().collect(Collectors.toList());
     }
 
+    public String getIconsHeader(String mapName) {
+        /** Returns KML file header with icon data with original map name
+        * changed to given String
+         */
+        Pattern pattern = Pattern.compile("<Document>\\n\\t<name>(.+?)</name>");
+
+        return pattern.matcher(getIconsHeader())
+                .replaceFirst("<Document>\\n\\t<name>" +
+                        mapName+
+                        "</name>\""
+                );
+    }
+
     public String getIconsHeader() {
+        /** Returns unchanged KML file header with icon data.
+        *
+         */
         LOGGER.info("getIconHeader called");
         return IconsHeader;
     }

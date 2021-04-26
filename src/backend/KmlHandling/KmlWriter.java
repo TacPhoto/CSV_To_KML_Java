@@ -417,4 +417,3 @@ public class KmlWriter {
     }
 
 }
-//TODO: when everything is ready, switch from keeping data int Strings to writing them directly to file (if possible)

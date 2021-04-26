@@ -24,6 +24,7 @@ import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -104,7 +105,7 @@ public class MainWindowController {
 
     private Integer numberOfCategories;
 
-    private List<String> lineList = new ArrayList<String>();
+    private List<String> lineList = new ArrayList<>();
     ObservableList<String> categoriesList;
     ObservableList<String> iconList;
 
@@ -133,23 +134,20 @@ public class MainWindowController {
         savePresetButton.setDisable(true); //enabled by selectOutputPresetFile() and a listener
         processSaveMapButton.setDisable(true); //enabled by outputPathTextField listener and selectOutputKMLFile()
 
-        iconPresetPathTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                try{
-                    if(StringUtils.isNotBlank(newValue)){
-                        presetPath = newValue.trim();
-                        loadDataButton.setDisable(false);
-                    }else{
-                        loadDataButton.setDisable(true);
-                    }
-                }catch(Exception e){
-                    presetPath = oldValue.trim();
+        iconPresetPathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try{
+                if(StringUtils.isNotBlank(newValue)){
+                    presetPath = newValue.trim();
+                    loadDataButton.setDisable(false);
+                }else{
+                    loadDataButton.setDisable(true);
                 }
+            }catch(Exception e){
+                presetPath = oldValue.trim();
             }
         });
 
-        csvPathTextField.textProperty().addListener(new ChangeListener<String>() {
+        csvPathTextField.textProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 try{
@@ -588,8 +586,10 @@ public class MainWindowController {
         //TODO: handle addLastCategory
         CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(iconList, getNumberOfCategories(),5, lineList.get(1), false, true, iconSet);
 
+        String mapName = Paths.get(outputKMLPath).getFileName().toString();
+
         KmlWriter kmlWriter = new KmlWriter(lineList,
-                kmlHeader,
+                originalKmlData.getIconsHeader(mapName),
                 getNumberOfCategories(),
                 outputKMLPath,
                 csvRecordToStringInitData
@@ -607,7 +607,3 @@ public class MainWindowController {
 
 
 //TODO: file selectors must show files (see preset file selector)
-
-// TODO: Replace string below with proper file name in final KML
-//  <Document>
-//  <name>ShortExample.kml</name>
