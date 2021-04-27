@@ -264,9 +264,33 @@ public class MainWindowController {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
-    private File selectOpenFile(String extension) {
+    private File selectOpenFile(String... extension) {
+        /** Opens a file selection window.
+         * Pass extensions as params in ExtensionFilter format
+         * for example "*.extensionName"
+         * If no extension is passed, it will show all files.
+         */
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
+
+        String description = "";
+        int count = 0;
+        for(String s : extension){
+            description += " " + s;
+        }
+
+        String[] extensionsArr = new String[extension.length * 2];
+        int j = 0;
+        for(int i = 0; i < extension.length; i++){
+            extensionsArr[j] = extension[i].toLowerCase();
+            extensionsArr[j+ 1] = extension[i].toUpperCase();
+            j += 2;
+        }
+
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
+                description,
+                extensionsArr
+                );
+
 
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
@@ -280,6 +304,9 @@ public class MainWindowController {
     }
 
     private File selectSaveFile(String extension) {
+        // TODO: make Save File selection window work like selectOpenFile()
+        //  it should support varargs and multiple extension
+        //  next step would be making this code more DRY
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
 
@@ -291,7 +318,7 @@ public class MainWindowController {
 
     public boolean selectOutputPresetFile() {
         try {
-            outputPresetPath = selectSaveFile("kmlpreset").getPath();
+            outputPresetPath = selectSaveFile("*.kmlpreset").getPath();
 
             if(!outputPresetPath.toLowerCase().endsWith(".kmlpreset")){
                 outputPresetPath = outputPresetPath + ".kmlpreset";
@@ -312,7 +339,7 @@ public class MainWindowController {
 
     public boolean selectOutputKMLFile() {
         try {
-            outputKMLPath = selectSaveFile("kml").getPath();
+            outputKMLPath = selectSaveFile("*.kml").getPath();
 
             if(!outputKMLPath.toLowerCase().endsWith(".kml")){
                 outputKMLPath = outputKMLPath + ".kml";
@@ -337,7 +364,7 @@ public class MainWindowController {
 
     public void selectPresetFile() {
         try {
-            presetPath = selectOpenFile().getPath();
+            presetPath = selectOpenFile("*.kml", "*.kmlpreset").getPath();
             iconPresetPathTextField.setText(presetPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
@@ -348,7 +375,7 @@ public class MainWindowController {
 
     public void selectCsvFile() {
         try {
-            csvPath = selectOpenFile("csv").getPath();
+            csvPath = selectOpenFile("*.csv").getPath();
             csvPathTextField.setText(csvPath);
         } catch (Exception e) {
             //case when no file was selected. Ignore
@@ -452,6 +479,8 @@ public class MainWindowController {
             CsvReader csvReader = new CsvReader(csvPath);
             sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
             lineList = csvReader.getLineList();
+            // TODO: add and handle hasHeader button
+            // TODO: add and handle addLastCategory button
             lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
             categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
 
@@ -583,8 +612,15 @@ public class MainWindowController {
         refreshIconSetPairedIcons();
         //TODO: handle hasRating
         //TODO: handle maxRate
-        //TODO: handle addLastCategory
-        CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(iconList, getNumberOfCategories(),5, lineList.get(1), false, true, iconSet);
+        CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(
+                iconList,
+                getNumberOfCategories(),
+                5,
+                lineList.get(1),
+                false,
+                true,
+                iconSet
+        );
 
         String mapName = Paths.get(outputKMLPath).getFileName().toString();
 
@@ -593,7 +629,7 @@ public class MainWindowController {
                 getNumberOfCategories(),
                 outputKMLPath,
                 csvRecordToStringInitData
-                );
+        );
 
         if(kmlWriter.writeKMLFile(true)){
             setMessageLabelText("Successfully saved a KML File",
@@ -604,6 +640,3 @@ public class MainWindowController {
         }
     }
 }
-
-
-//TODO: file selectors must show files (see preset file selector)
