@@ -20,6 +20,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
+import org.jetbrains.annotations.NotNull;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
@@ -259,6 +260,33 @@ public class MainWindowController {
         messageContentLabel.setText(message);
     }
 
+    private String[][] convertExtensionVararg(String... extension){
+        /** Takes zero, one or multiple extensions and returns a String[][]
+        * String[0][0] contains a prepared description String,
+         * String[1] contains array of formatted extensions.
+         *
+         * This approach reduces need of creating a new class or merging
+         * data into a single array while letting us return multiple variables.
+         */
+
+        String description = "";
+        for(String s : extension){
+            description += " " + s;
+        }
+
+        String[] extensionsArr = new String[extension.length * 2];
+        int j = 0;
+        for(int i = 0; i < extension.length; i++){
+            extensionsArr[j] = extension[i].toLowerCase();
+            extensionsArr[j+ 1] = extension[i].toUpperCase();
+            j += 2;
+        }
+
+        String[] descrWrapper = {description}; // it will let us parr description as an array in a next line
+        String[][] converted = {descrWrapper, extensionsArr};
+        return converted;
+    }
+
     private File selectOpenFile() {
         FileChooser fileChooser = new FileChooser();
         return fileChooser.showOpenDialog(primaryStage);
@@ -272,30 +300,24 @@ public class MainWindowController {
          */
         FileChooser fileChooser = new FileChooser();
 
-        String description = "";
-        int count = 0;
-        for(String s : extension){
-            description += " " + s;
-        }
-
-        String[] extensionsArr = new String[extension.length * 2];
-        int j = 0;
-        for(int i = 0; i < extension.length; i++){
-            extensionsArr[j] = extension[i].toLowerCase();
-            extensionsArr[j+ 1] = extension[i].toUpperCase();
-            j += 2;
-        }
-
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
-                description,
-                extensionsArr
-                );
-
+        FileChooser.ExtensionFilter extensionFilter = getExtensionFilter(extension);
 
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
 
         return fileChooser.showOpenDialog(primaryStage);
+    }
+
+    private FileChooser.ExtensionFilter getExtensionFilter(String... extension) {
+        String[][] convertedExtension = convertExtensionVararg(extension);
+
+        String description = convertedExtension[0][0];
+        String[] extensionsArr = convertedExtension[1];
+
+        return new FileChooser.ExtensionFilter(
+                description,
+                extensionsArr
+        );
     }
 
     private File selectSaveFile() {
@@ -304,11 +326,9 @@ public class MainWindowController {
     }
 
     private File selectSaveFile(String extension) {
-        // TODO: make Save File selection window work like selectOpenFile()
-        //  it should support varargs and multiple extension
-        //  next step would be making this code more DRY
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(extension.toUpperCase() + " file",extension.toLowerCase(), extension.toUpperCase());
+
+        FileChooser.ExtensionFilter extensionFilter = getExtensionFilter(extension);
 
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
