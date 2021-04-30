@@ -1,0 +1,5 @@
+longitude, latitude, name, description, rating;
+51.5085300;  -0.1257400; London; some city in England, likely a capital city; 5;
+39.907500; 116.397230; Warsaw; some city in Poland, likely a capital city; 5;
+51.10000; 17.0333300; Wroclaw; another city in Poland; 5;
+44.1038; 9.7235; Manarola; Italian village; 5;

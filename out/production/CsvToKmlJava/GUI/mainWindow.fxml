@@ -159,7 +159,7 @@
                   <Insets left="350.0" top="50.0" />
                </StackPane.margin>
             </Text>
-            <RadioButton fx:id="addLastCategoryRadio" mnemonicParsing="false" StackPane.alignment="TOP_LEFT">
+            <RadioButton fx:id="addLastCategoryRadio" mnemonicParsing="false" selected="true" StackPane.alignment="TOP_LEFT">
                <StackPane.margin>
                   <Insets left="450.0" top="50.0" />
                </StackPane.margin>

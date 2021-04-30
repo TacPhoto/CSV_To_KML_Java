@@ -8,7 +8,7 @@ public class CsvRecordToString {
     public List<String> iconList; //iconList from OriginalKmlData
     int categoriesAmount, maxRate;
     String line, record;
-    boolean hasRating, addLastCategory;
+    public boolean hasRating, addLastCategory;
     private String lastCategory;
     private IconSet iconSet;
 
@@ -38,7 +38,7 @@ public class CsvRecordToString {
         this.line = line;
     }
 
-    private String getPinData(){ //todo: implement 0 categories variant, overload and handle it
+    private String getPinData(){
         /**
          * reads Pin data. it ignores folders and folder indentation
          * folder indentation should be added later, per line
@@ -75,7 +75,18 @@ public class CsvRecordToString {
         String longitude = lineSplit[categoriesAmount + 1];
         String name = lineSplit[categoriesAmount + 2];
         String rating = hasRating ? lineSplit[lineSplit.length - 1] + "//" + maxRate : ""; //todo: allow to input number instead of checking number of characters
-        lastCategory =  addLastCategory ? lineSplit[categoriesAmount - 1] : ""; //tolerates 0 categories variant
+/*
+        if(categoriesAmount < 2)
+            lastCategory = categoriesAmount == 0 ? "" : lineSplit[categoriesAmount - 1];
+        else
+            lastCategory =  addLastCategory ? lineSplit[categoriesAmount - 1] : lineSplit[categoriesAmount - 2];
+*/
+        if (categoriesAmount > 0)
+            lastCategory =  addLastCategory ? lineSplit[categoriesAmount - 1] : ""; //tolerates 0 categories variant
+                if(categoriesAmount > 2 && !addLastCategory)
+                    lastCategory = lineSplit[categoriesAmount - 2];
+        else
+            lastCategory = "";
 
         StringBuilder descriptionBuilder = new StringBuilder();
 
@@ -91,7 +102,7 @@ public class CsvRecordToString {
 
         ////Make a paste ready Placemark data string:
         /**
-        *Indentation below may not match the one from the comment abovr
+        *Indentation below may not match the one from the comment above
          *but it is correct. It's based on kml format
          */
 
@@ -130,7 +141,6 @@ public class CsvRecordToString {
         * getIconName returns a proper icon name from icon preset
          * it's associated with lastCategory
          */
-        //System.out.println(iconSet.toString()); //debug
         return this.iconSet.getIconForCategory(lastCategory);
     }
 

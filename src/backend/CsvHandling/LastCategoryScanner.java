@@ -18,10 +18,12 @@ public class LastCategoryScanner {
     private int categoriesAmount;
     private boolean addLastCategory, hasHeader;
 
+    // TODO: make LastCategoryScanner show category[categoriesAmount - 1] if
+    //  addLastCategory is enabled
     public LastCategoryScanner(String csv, int categoriesAmount, boolean addLastCategory, boolean hasHeader) throws IOException {
         this.csv = csv;
         this.categoriesAmount = categoriesAmount;
-        this.addLastCategory = addLastCategory;
+        this.addLastCategory = (categoriesAmount == 0) ? false : addLastCategory;
         this.hasHeader = hasHeader;
 
         getLastCategories();

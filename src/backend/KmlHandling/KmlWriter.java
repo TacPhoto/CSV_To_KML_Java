@@ -15,8 +15,6 @@ public class KmlWriter {
     public int categoriesAmount;
     public int foldersAmount;     //categoriesAmount - 1 because last category is not used to make folders but to assign icon
     private int currentIndent;    //stores current indentation level. It should not ba affected by base indent in a single record.
-    //It should be only affected by Folder indentation level;
-    private CsvRecordToStringInitData csvRecordToStringInitData;
     private CsvRecordToString csvRecordToString;
 
     public KmlWriter(List<String> lineList, String kmlHeader, int categoriesAmount, String outputPath, CsvRecordToStringInitData csvRecordToStringInitData) {
@@ -25,8 +23,7 @@ public class KmlWriter {
         this.outputPath = outputPath;
         this.categoriesAmount = categoriesAmount;
         this.foldersAmount = categoriesAmount - 1;
-        this.currentIndent = 1;
-        this.csvRecordToStringInitData = csvRecordToStringInitData;
+        this.currentIndent = 1; //It should be only affected by Folder indentation level;
         this.csvRecordToString = new CsvRecordToString(csvRecordToStringInitData);
     }
 
@@ -251,9 +248,12 @@ public class KmlWriter {
             }
         }
 
+
         //close last folder
-        for (int i = 0; i < currentIndent - 1; i++) {
-            result.append(closeFolder());
+        if(foldersAmount > 0) {
+            for (int i = 0; i < currentIndent - 1; i++) {
+                result.append(closeFolder());
+            }
         }
 
         return result.toString();
@@ -320,8 +320,10 @@ public class KmlWriter {
         }
 
         //close last folder
-        for (int i = 0; i < currentIndent - 1; i++) {
-            writer.append(closeFolder());
+        if(foldersAmount > 0) {
+            for (int i = 0; i < currentIndent - 1; i++) {
+                writer.append(closeFolder());
+            }
         }
     }
 

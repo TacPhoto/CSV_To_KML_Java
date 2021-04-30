@@ -462,7 +462,7 @@ public class MainWindowController {
     }
 
     public Integer getNumberOfCategories() {
-        return numberOfCategories;
+        return numberOfCategories == null ? 0 : numberOfCategories;
     }
 
     public void setNumberOfCategories(Integer numberOfCategories) {
@@ -507,9 +507,9 @@ public class MainWindowController {
             CsvReader csvReader = new CsvReader(csvPath);
             sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
             lineList = csvReader.getLineList();
-            
+
             lastCategoryScanner = new LastCategoryScanner(sortedCsv,
-                    numberOfCategories,
+                    getNumberOfCategories(),
                     addLastCategoryRadio.isSelected(),
                     hasRatingRadio.isSelected()
             );
