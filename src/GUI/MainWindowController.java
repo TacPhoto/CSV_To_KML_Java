@@ -20,7 +20,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
-import org.jetbrains.annotations.NotNull;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
@@ -67,6 +66,10 @@ public class MainWindowController {
     public Button outputPathSelectorButton;
     @FXML
     public RadioButton generateKmzRadio;
+    @FXML
+    private RadioButton addLastCategoryRadio;
+    @FXML
+    private RadioButton hasRatingRadio;
     @FXML
     public Label errorLabel;
     @FXML
@@ -282,21 +285,21 @@ public class MainWindowController {
             j += 2;
         }
 
-        String[] descrWrapper = {description}; // it will let us parr description as an array in a next line
+        String[] descrWrapper = {description}; // it will let us pass description as an array in a next line
         String[][] converted = {descrWrapper, extensionsArr};
         return converted;
     }
 
     private File selectOpenFile() {
-        FileChooser fileChooser = new FileChooser();
-        return fileChooser.showOpenDialog(primaryStage);
+        return selectOpenFile(null);
     }
 
     private File selectOpenFile(String... extension) {
-        /** Opens a file selection window.
+        /** Opens a file selection window for opening file.
          * Pass extensions as params in ExtensionFilter format
          * for example "*.extensionName"
-         * If no extension is passed, it will show all files.
+         * If no extension (or null) is passed, it will show all files.
+         * Returns File
          */
         FileChooser fileChooser = new FileChooser();
 
@@ -321,12 +324,17 @@ public class MainWindowController {
     }
 
     private File selectSaveFile() {
-        FileChooser fileChooser = new FileChooser();
-        return fileChooser.showSaveDialog(primaryStage);
+        return selectSaveFile(null);
     }
 
     private File selectSaveFile(String extension) {
-        FileChooser fileChooser = new FileChooser();
+        /** Opens a file selection window for saving file.
+         * Pass extensions as params in ExtensionFilter format
+         * for example "*.extensionName"
+         * If no extension (or null) is passed, it will show all files         * Returns File
+         */
+
+         FileChooser fileChooser = new FileChooser();
 
         FileChooser.ExtensionFilter extensionFilter = getExtensionFilter(extension);
 
@@ -499,9 +507,12 @@ public class MainWindowController {
             CsvReader csvReader = new CsvReader(csvPath);
             sortedCsv = csvReader.getSortedCsvReadyString(); //necessary for getLineList(), otherwise it will return nothing
             lineList = csvReader.getLineList();
-            // TODO: add and handle hasHeader button
-            // TODO: add and handle addLastCategory button
-            lastCategoryScanner = new LastCategoryScanner(sortedCsv, numberOfCategories, true, true);
+            
+            lastCategoryScanner = new LastCategoryScanner(sortedCsv,
+                    numberOfCategories,
+                    addLastCategoryRadio.isSelected(),
+                    hasRatingRadio.isSelected()
+            );
             categoriesList = FXCollections.observableArrayList(lastCategoryScanner.getLastCatList());
 
             //parse kml header
@@ -630,15 +641,14 @@ public class MainWindowController {
     public void saveKMLFile() throws IOException {
         LOGGER.info("saveKMLFile()");
         refreshIconSetPairedIcons();
-        //TODO: handle hasRating
-        //TODO: handle maxRate
+
         CsvRecordToStringInitData csvRecordToStringInitData = new CsvRecordToStringInitData(
                 iconList,
                 getNumberOfCategories(),
                 5,
                 lineList.get(1),
-                false,
-                true,
+                hasRatingRadio.isSelected(),
+                addLastCategoryRadio.isSelected(),
                 iconSet
         );
 

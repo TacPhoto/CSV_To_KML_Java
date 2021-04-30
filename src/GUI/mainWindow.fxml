@@ -118,10 +118,6 @@
                   <Insets right="10.0" top="152.5" />
                </StackPane.margin>
             </Button>
-            <Text layoutX="17.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save Also KMZ File" StackPane.alignment="TOP_LEFT">
-               <StackPane.margin>
-                  <Insets left="10.0" top="188.0" />
-               </StackPane.margin></Text>
             <RadioButton fx:id="generateKmzRadio" layoutX="127.0" layoutY="208.0" mnemonicParsing="false" StackPane.alignment="TOP_LEFT">
                <StackPane.margin>
                   <Insets left="125.0" top="188.0" />
@@ -154,6 +150,30 @@
                   <Insets right="10.0" top="291.5" />
                </StackPane.margin>
             </Button>
+            <Text layoutX="17.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save Also KMZ File" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="188.0" />
+               </StackPane.margin></Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add last category" wrappingWidth="99.662109375" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="350.0" top="50.0" />
+               </StackPane.margin>
+            </Text>
+            <RadioButton fx:id="addLastCategoryRadio" mnemonicParsing="false" selected="true" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="450.0" top="50.0" />
+               </StackPane.margin>
+            </RadioButton>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Places have rating" wrappingWidth="99.662109375" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="10.0" top="22.0" />
+               </StackPane.margin>
+            </Text>
+            <RadioButton fx:id="hasRatingRadio" mnemonicParsing="false" selected="true" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="115.0" top="22.0" />
+               </StackPane.margin>
+            </RadioButton>
          </children>
       </StackPane>
       <StackPane layoutY="744.0" prefHeight="29.0" prefWidth="983.0">
